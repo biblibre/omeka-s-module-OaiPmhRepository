@@ -106,7 +106,7 @@ msgstr "Aucun site."
 
 #: src/Service/OaiPmh/OaiSetManagerFactory.php:20
 msgid "Missing set format configuration"
-msgstr "Il manque la configuation du format du lot"
+msgstr "Il manque la configuation du format"
 
 #: src/Service/OaiPmh/MetadataFormatManagerFactory.php:20
 msgid "Missing metadata format configuration"
@@ -554,7 +554,7 @@ msgid ""
 msgstr ""
 "Un alignement simple entre les propriétés foaf et Dublin Core a été ajouté à "
 "la configuration par défaut. Cela permet de publier, par exemple, les "
-"métadonnées courantes des personnes."
+"métadonnées couramment utilisées."
 
 #: data/scripts/upgrade.php:134
 #, php-format
@@ -562,7 +562,7 @@ msgid ""
 "You can copy the %1$sdefault mapping foaf to dcterms%2$s in the config of "
 "the module if needed."
 msgstr ""
-"Vous pouvez copier %1$sl’alignement par défaut entre foaf et dcterms%2$s "
+"Vous pouvez copier %1$scorrespondance par défaut entre foaf et dcterms%2$s "
 "dans la configuration du module si besoin."
 
 #: data/scripts/upgrade.php:143
@@ -600,7 +600,7 @@ msgid ""
 "BnF (Bibliothèque nationale de France): thumbnail, uri without attribute, "
 "class as main type."
 msgstr ""
-"De nouvelles options ont été ajouter en conformité avec les recommandations "
+"De nouvelles options ont été ajoutées en conformité avec les recommandations "
 "non standard de la Bibliothèque nationale de France : vignette, uri sans "
 "attribut, classe en tant que type général."
 
