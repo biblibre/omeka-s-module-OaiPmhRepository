@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-16 13:29+0200\n"
+"POT-Creation-Date: 2024-04-19 10:42+0200\n"
 "PO-Revision-Date: 2023-07-24 00:00+0000\n"
 "Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
 "Language-Team: \n"
@@ -401,6 +401,13 @@ msgstr "Html"
 msgid "Dublin Core: Add the class as Dublin Core type"
 msgstr "Dublin Core : ajouter la classe en tant que type Dublin Core"
 
+#: src/Form/ConfigForm.php:304
+msgid ""
+"For compliance with non-standard requirements of BnF, use a table to map to "
+"main types."
+msgstr ""
+"Pour se conformer aux exigences non standard de la BnF, utiliser un tableau pour établir une correspondance avec les principaux types."
+
 #: src/Form/ConfigForm.php:309 src/Form/ConfigForm.php:327
 msgid "Local name"
 msgstr "Nom local"
@@ -652,7 +659,8 @@ msgstr ""
 #~ "l’option."
 
 #~ msgid "It allows to expose all metadata in the standard oai_dc."
-#~ msgstr "Cela permet d’exposer toutes les métadonnées dans le standard oai_dc."
+#~ msgstr ""
+#~ "Cela permet d’exposer toutes les métadonnées dans le standard oai_dc."
 
 #~ msgid ""
 #~ "For other merges, the event \"oaipmhrepository.values.pre\" can be used."
