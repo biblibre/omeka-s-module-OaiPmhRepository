@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-17 09:50+0200\n"
+"POT-Creation-Date: 2024-04-19 10:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -370,6 +370,12 @@ msgstr ""
 
 #: src/Form/ConfigForm.php:303
 msgid "Dublin Core: Add the class as Dublin Core type"
+msgstr ""
+
+#: src/Form/ConfigForm.php:304
+msgid ""
+"For compliance with non-standard requirements of BnF, use a table to map to "
+"main types."
 msgstr ""
 
 #: src/Form/ConfigForm.php:309 src/Form/ConfigForm.php:327
