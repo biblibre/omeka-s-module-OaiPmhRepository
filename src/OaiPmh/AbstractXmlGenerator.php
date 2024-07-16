@@ -70,7 +70,7 @@ class AbstractXmlGenerator
             $newElement->appendChild($text);
         }
         foreach ($attributes as $name => $attribute) {
-            $newElement->setAttribute($name, $attribute);
+            $newElement->setAttribute($name, $this->stripInvalidXmlChars($attribute));
         }
         $parent->appendChild($newElement);
 
