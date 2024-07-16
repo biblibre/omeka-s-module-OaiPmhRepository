@@ -38,7 +38,8 @@ class AbstractXmlGenerator
                 $this->createElementWithChildren($newElement, $tag, $value);
             } else {
                 $element = $document->createElement($tag);
-                $element->appendChild($document->createTextNode((string) $value));
+                $value = $this->stripInvalidXmlChars((string) $value);
+                $element->appendChild($document->createTextNode($value));
                 $newElement->appendChild($element);
             }
         }
@@ -64,7 +65,8 @@ class AbstractXmlGenerator
         $newElement = $document->createElement($name);
         // Use a TextNode, causes escaping of input text
         if ($text) {
-            $text = $document->createTextNode((string) $text);
+            $text = $this->stripInvalidXmlChars((string) $text);
+            $text = $document->createTextNode($text);
             $newElement->appendChild($text);
         }
         foreach ($attributes as $name => $attribute) {
@@ -73,5 +75,10 @@ class AbstractXmlGenerator
         $parent->appendChild($newElement);
 
         return $newElement;
+    }
+
+    protected function stripInvalidXmlChars(string $string): string
+    {
+        return preg_replace('/[\x00-\x08\x0b\x0c\x0e-\x1f]/', '', $string);
     }
 }
