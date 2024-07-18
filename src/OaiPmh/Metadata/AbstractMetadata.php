@@ -58,11 +58,6 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     protected $services;
 
     /**
-     * @var \Common\Stdlib\EasyMeta
-     */
-    protected $easyMeta;
-
-    /**
      * The class used to create the set data (spec, name and description).
      *
      * @var OaiSetInterface
@@ -84,7 +79,6 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     public function setServices(ServiceLocatorInterface $services)
     {
         $this->services = $services;
-        $this->easyMeta = $services->get('EasyMeta');
         return $this;
     }
 
@@ -208,17 +202,15 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     protected function formatValue(ValueRepresentation $value): array
     {
-        $dataType = $value->type();
-        $mainType = $this->easyMeta->dataTypeMain($dataType);
-        switch ($mainType) {
-            case 'resource':
-                return $this->formatValueResource($value->valueResource());
-            case 'uri':
-                return $this->formatValueUri($value);
-            case 'literal':
-            default:
-                return $this->formatValueLiteral($value);
+        if ($valueResource = $value->valueResource()) {
+            return $this->formatValueResource($valueResource);
         }
+
+        if ($value->uri()) {
+            $this->formatValueUri($value);
+        }
+
+        return $this->formatValueLiteral($value);
     }
 
     protected function formatValueLiteral(ValueRepresentation $value): array
