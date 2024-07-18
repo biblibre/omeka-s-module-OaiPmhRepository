@@ -1,9 +1,11 @@
 OAI-PMH Repository (module for Omeka S)
 =======================================
 
-> __New versions of this module and support for Omeka S version 3.0 and above
-> are available on [GitLab], which seems to respect users and privacy better
-> than the previous repository.__
+> [!NOTE]
+> This is a fork of https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository
+>
+> Changes from the original module are documented in
+> [CHANGELOG.biblibre.md](CHANGELOG.biblibre.md)
 
 [OAI-PMH Repository] is a module for [Omeka S] that implements an Open Archives
 Initiative Protocol for Metadata Harvesting ([OAI-PMH]) repository for Omeka S,
@@ -120,7 +122,7 @@ be updated.
 
 ### Map properties
 
-This option allows to expose any metadata as another one. The [default mapping]
+This option allows to expose any metadata as another one. The default mapping
 maps Bibliographic Ontology (bibo) and Friend of a Friend (foaf) into Dublin Core.
 Of course is not perfect, but you can adapt it to your real data. See the default
 For foaf, a [spreadsheet] can help to improve the mapping.
@@ -311,18 +313,17 @@ for [Omeka] by [BibLibre] and provide the same features as the original plugin
 and many more.
 
 
-[OAI-PMH Repository]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository
+[OAI-PMH Repository]: https://github.com/biblibre/omeka-s-module-OaiPmhRepository
 [Omeka S]: https://omeka.org/s
 [OAI-PMH]: https://www.openarchives.org/OAI/openarchivesprotocol.html
 [OAI-PMH Repository plugin]: https://github.com/omeka/plugin-OaiPmhRepository
 [Omeka]: https://omeka.org/classic
 [BibLibre]: https://github.com/biblibre
 [installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
-[OaiPmhRepository.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/releases
+[OaiPmhRepository.zip]: https://github.com/biblibre/omeka-s-module-OaiPmhRepository/releases/latest
 [Bootstrap]: https://getbootstrap.com
-[default mapping]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130
-[spreadsheet]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/foaf_to_dcterms.ods
-[`oai-pmh-repository.xsl`]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/blob/master/asset/xsl/oai-pmh-repository.xsl
+[spreadsheet]: https://github.com/biblibre/omeka-s-module-OaiPmhRepository/raw/master/data/mappings/foaf_to_dcterms.ods
+[`oai-pmh-repository.xsl`]: https://github.com/biblibre/omeka-s-module-OaiPmhRepository/raw/master/asset/xsl/oai-pmh-repository.xsl
 [Dublin Core]: http://dublincore.org
 [Dublin Core Terms]: http://www.dublincore.org/documents/dcmi-terms/
 [CDWA Lite]: https://www.getty.edu/research/publications/electronic_publications/cdwa/cdwalite.html
@@ -333,7 +334,7 @@ and many more.
 [schema]: http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd
 [EAD]: http://www.loc.gov/ead/
 [`EAD`]: https://gitlab.com/Daniel-KM/Omeka-S-module-Ead
-[module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/issues
+[module issues]: https://github.com/biblibre/omeka-s-module-OaiPmhRepository/issues
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [CeCILL-B]: https://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
 [GitLab]: https://gitlab.com/Daniel-KM
