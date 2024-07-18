@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-20 00:00+0000\n"
+"POT-Creation-Date: 2024-07-18 13:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: data/scripts/upgrade.php:33 Module.php:47
-#, php-format
-msgid "The module %1$s should be upgraded to version %2$s or later."
-msgstr ""
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:13
 msgid "OAI-PMH Repository"
@@ -66,64 +61,66 @@ msgstr ""
 msgid "No site."
 msgstr ""
 
-#: data/scripts/upgrade.php:106
+#: Module.php:341
 msgid ""
 "The event \"oaipmhrepository.values\" that may be used by other modules was "
 "deprecated and replaced by event \"oaipmhrepository.values.pre\"."
 msgstr ""
 
-#: data/scripts/upgrade.php:110
+#: Module.php:342
 msgid ""
 "Futhermore, a new option allows to map any term to any other term, so any "
 "values can be exposed if needed."
 msgstr ""
 
-#: data/scripts/upgrade.php:123
+#: Module.php:352
 msgid ""
 "It is now possible to define oai sets with a specific list of item sets or "
 "with a list of search queries."
 msgstr ""
 
-#: data/scripts/upgrade.php:130
+#: Module.php:356
 msgid ""
 "A simple mapping of foaf properties to Dublin Core has been added to the "
 "default config. It allows to publish, for example, common metadata of people."
 msgstr ""
 
-#: data/scripts/upgrade.php:144
+#: Module.php:368
+#, php-format
 msgid ""
-"You can copy the {link}default mapping foaf to dcterms{link_end} in the "
-"config of the module if needed."
+"You can copy the %sdefault mapping foaf to dcterms%s in the config of the "
+"module if needed."
 msgstr ""
 
-#: data/scripts/upgrade.php:155
+#: Module.php:377
 #, php-format
 msgid ""
 "An option was added to append a thumbnail url according to the non-standard "
 "%1$srecommandation%2$s of the Bibliothèque nationale de France."
 msgstr ""
 
-#: data/scripts/upgrade.php:165
+#: Module.php:384
 msgid ""
 "The deprecated event \"oaipmhrepository.values\" was removed. Use "
 "\"oaipmhrepository.values.pre\" instead."
 msgstr ""
 
-#: data/scripts/upgrade.php:175
+#: Module.php:392
+#, php-format
 msgid ""
 "A new output metadata format was added, \"simple_xml\", that contains all "
 "the values in a simple xml, not only the dublin core ones. You can disabled "
-"it in the {link}config of the module{link_end}."
+"it in the %sconfig of the module%s."
 msgstr ""
 
-#: data/scripts/upgrade.php:208
+#: Module.php:422
 msgid ""
 "Some new options were added for compliance with non-standard requirements of "
 "BnF (Bibliothèque nationale de France): thumbnail, uri without attribute, "
 "class as main type."
 msgstr ""
 
-#: data/scripts/upgrade.php:247
+#: Module.php:458
 msgid ""
 "A new option allows to strip xml/html tags of data. It is enable by default "
 "for all formats except simple_xml."
@@ -466,6 +463,14 @@ msgid ""
 "Larger values will make the tokens table grow somewhat larger."
 msgstr ""
 
+#: src/Service/OaiPmh/MetadataFormatManagerFactory.php:20
+msgid "Missing metadata format configuration"
+msgstr ""
+
+#: src/Service/OaiPmh/OaiSetManagerFactory.php:20
+msgid "Missing set format configuration"
+msgstr ""
+
 #: src/OaiPmh/ResponseGenerator.php:261
 msgid "No verb specified."
 msgstr ""
@@ -506,12 +511,4 @@ msgstr ""
 
 #: src/OaiPmh/ResponseGenerator.php:725
 msgid "No records match the given criteria."
-msgstr ""
-
-#: src/Service/OaiPmh/OaiSetManagerFactory.php:20
-msgid "Missing set format configuration"
-msgstr ""
-
-#: src/Service/OaiPmh/MetadataFormatManagerFactory.php:20
-msgid "Missing metadata format configuration"
 msgstr ""

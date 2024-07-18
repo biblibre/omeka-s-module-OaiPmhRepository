@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-20 00:00+0000\n"
-"PO-Revision-Date: 2024-05-20 00:00+0000\n"
-"Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
+"POT-Creation-Date: 2024-07-18 13:36+0200\n"
+"PO-Revision-Date: 2024-07-18 13:37+0200\n"
+"Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.2.2\n"
-
-#: data/scripts/upgrade.php:33 Module.php:47
-#, php-format
-msgid "The module %1$s should be upgraded to version %2$s or later."
-msgstr "Le module %1$s doit être mis à niveau à la version %2$s ou supérieure."
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:13
 msgid "OAI-PMH Repository"
@@ -66,7 +61,7 @@ msgstr "Sans les lots oai."
 msgid "No site."
 msgstr "Aucun site."
 
-#: data/scripts/upgrade.php:106
+#: Module.php:341
 msgid ""
 "The event \"oaipmhrepository.values\" that may be used by other modules was "
 "deprecated and replaced by event \"oaipmhrepository.values.pre\"."
@@ -75,7 +70,7 @@ msgstr ""
 "d'autres modules est obsolète et a été remplacé par l’événement "
 "\"oaipmhrepository.values.pre\"."
 
-#: data/scripts/upgrade.php:110
+#: Module.php:342
 msgid ""
 "Futhermore, a new option allows to map any term to any other term, so any "
 "values can be exposed if needed."
@@ -83,7 +78,7 @@ msgstr ""
 "De plus, une nouvelle option permet de faire correspondre n'importe quels "
 "termes afin d'exposer toutes les valeurs, si besoin."
 
-#: data/scripts/upgrade.php:123
+#: Module.php:352
 msgid ""
 "It is now possible to define oai sets with a specific list of item sets or "
 "with a list of search queries."
@@ -91,7 +86,7 @@ msgstr ""
 "Il est désormais possible de définir des lots oai avec un liste spécifique "
 "de collections ou avec une liste de requêtes de recherche avancée."
 
-#: data/scripts/upgrade.php:130
+#: Module.php:356
 msgid ""
 "A simple mapping of foaf properties to Dublin Core has been added to the "
 "default config. It allows to publish, for example, common metadata of people."
@@ -100,15 +95,16 @@ msgstr ""
 "la configuration par défaut. Cela permet de publier, par exemple, les "
 "métadonnées courantes des personnes."
 
-#: data/scripts/upgrade.php:144
+#: Module.php:368
+#, php-format
 msgid ""
-"You can copy the {link}default mapping foaf to dcterms{link_end} in the "
-"config of the module if needed."
+"You can copy the %sdefault mapping foaf to dcterms%s in the config of the "
+"module if needed."
 msgstr ""
-"Vous pouvez copier {link}l’alignement par défaut entre foaf et "
-"dcterms{link_end} dans la configuration du module si besoin."
+"Vous pouvez copier %sl’alignement par défaut entre foaf et dcterms%s dans la "
+"configuration du module si besoin."
 
-#: data/scripts/upgrade.php:155
+#: Module.php:377
 #, php-format
 msgid ""
 "An option was added to append a thumbnail url according to the non-standard "
@@ -118,7 +114,7 @@ msgstr ""
 "aux %1$srecommandations%2$s non standard de la Bibliothèque nationale de "
 "France."
 
-#: data/scripts/upgrade.php:165
+#: Module.php:384
 msgid ""
 "The deprecated event \"oaipmhrepository.values\" was removed. Use "
 "\"oaipmhrepository.values.pre\" instead."
@@ -126,17 +122,18 @@ msgstr ""
 "L’événement obsolète \"oaipmhrepository.values\" a été supprimé. Utiliser "
 "\"oaipmhrepository.values.pre\" à la place."
 
-#: data/scripts/upgrade.php:175
+#: Module.php:392
+#, php-format
 msgid ""
 "A new output metadata format was added, \"simple_xml\", that contains all "
 "the values in a simple xml, not only the dublin core ones. You can disabled "
-"it in the {link}config of the module{link_end}."
+"it in the %sconfig of the module%s."
 msgstr ""
 "Un nouveau format de métadonnées a été ajouté, « simple_xml ». Il contient "
 "toutes les valeurs et pas seulement celles du Dublin Core. Vous pouvez le "
-"désactiver dans la {link}configuration du module{link_end}."
+"désactiver dans la %sconfiguration du module%s."
 
-#: data/scripts/upgrade.php:208
+#: Module.php:422
 msgid ""
 "Some new options were added for compliance with non-standard requirements of "
 "BnF (Bibliothèque nationale de France): thumbnail, uri without attribute, "
@@ -146,7 +143,7 @@ msgstr ""
 "non standard de la Bibliothèque nationale de France : vignette, uri sans "
 "attribut, classe en tant que type général."
 
-#: data/scripts/upgrade.php:247
+#: Module.php:458
 msgid ""
 "A new option allows to strip xml/html tags of data. It is enable by default "
 "for all formats except simple_xml."
@@ -534,6 +531,14 @@ msgstr ""
 "permet aux moissonneurs de reprendre un ancien moissonnage. Une grande "
 "valeur implique que la table des jetons grossira davantage."
 
+#: src/Service/OaiPmh/MetadataFormatManagerFactory.php:20
+msgid "Missing metadata format configuration"
+msgstr "Il manque la configuration du format des métadonnées"
+
+#: src/Service/OaiPmh/OaiSetManagerFactory.php:20
+msgid "Missing set format configuration"
+msgstr "Il manque la configuation du format du lot"
+
 #: src/OaiPmh/ResponseGenerator.php:261
 msgid "No verb specified."
 msgstr "Pas de verbe spécifié."
@@ -578,13 +583,10 @@ msgstr "Le lot \"%s\" n’existe pas."
 msgid "No records match the given criteria."
 msgstr "Aucune notice ne correspond aux arguments."
 
-#: src/Service/OaiPmh/OaiSetManagerFactory.php:20
-msgid "Missing set format configuration"
-msgstr "Il manque la configuation du format du lot"
-
-#: src/Service/OaiPmh/MetadataFormatManagerFactory.php:20
-msgid "Missing metadata format configuration"
-msgstr "Il manque la configuration du format des métadonnées"
+#, php-format
+#~ msgid "The module %1$s should be upgraded to version %2$s or later."
+#~ msgstr ""
+#~ "Le module %1$s doit être mis à niveau à la version %2$s ou supérieure."
 
 #, php-format
 #~ msgid "This module requires the module \"%s\"."
