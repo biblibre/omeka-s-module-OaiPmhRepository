@@ -14,7 +14,6 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\View\Renderer\PhpRenderer;
 use OaiPmhRepository\Form\ConfigForm;
-use Omeka\Api\Representation\PropertyRepresentation;
 use Omeka\Module\AbstractModule;
 use Omeka\Stdlib\Message;
 
@@ -642,17 +641,19 @@ SQL;
 
         $values = $event->getParam('values');
 
-        foreach ($map as $destinationTerm => $dcterms) foreach ($dcterms as $sourceTerm) {
-            if (empty($values[$sourceTerm]['values'])) {
-                continue;
-            }
-            if (empty($values[$destinationTerm]['values'])) {
-                $values[$destinationTerm]['values'] = array_values($values[$sourceTerm]['values']);
-            } else {
-                $values[$destinationTerm]['values'] = array_merge(
+        foreach ($map as $destinationTerm => $dcterms) {
+            foreach ($dcterms as $sourceTerm) {
+                if (empty($values[$sourceTerm]['values'])) {
+                    continue;
+                }
+                if (empty($values[$destinationTerm]['values'])) {
+                    $values[$destinationTerm]['values'] = array_values($values[$sourceTerm]['values']);
+                } else {
+                    $values[$destinationTerm]['values'] = array_merge(
                     array_values($values[$destinationTerm]['values']),
                     array_values($values[$sourceTerm]['values'])
                 );
+                }
             }
         }
 
