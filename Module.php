@@ -761,9 +761,12 @@ SQL;
         $viewHelpers = $serviceLocator->get('ViewHelperManager');
         $serverUrlHelper = $viewHelpers->get('serverUrl');
 
-        $serverName = preg_replace('~(?:\w+://)?([^:]+)(?::\d*)?$~', '$1', $serverUrlHelper->getHost());
+        $host = $serverUrlHelper->getHost();
+        if ($host) {
+            $serverName = preg_replace('~(?:\w+://)?([^:]+)(?::\d*)?$~', '$1', $host);
+            $name = preg_replace('/[^a-z0-9\-\.]/i', '', $serverName);
+        }
 
-        $name = preg_replace('/[^a-z0-9\-\.]/i', '', $serverName);
         if (empty($name) || $name === 'localhost') {
             $name = 'default.must.change';
         }
