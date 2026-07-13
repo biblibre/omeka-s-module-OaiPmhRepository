@@ -43,7 +43,9 @@ ALTER TABLE oai_pmh_repository_token CHANGE id id INT AUTO_INCREMENT NOT NULL, C
 DROP INDEX expiration ON oai_pmh_repository_token;
 CREATE INDEX IDX_E9AC4F9524CD504D ON oai_pmh_repository_token (expiration);
 SQL;
-    $connection->executeStatement($sql);
+    foreach (array_filter(array_map('trim', explode(";\n", $sql))) as $sql) {
+        $connection->executeStatement($sql);
+    }
 
     $settings->set('oaipmhrepository_name', $settings->get('oaipmh_repository_name',
         $settings->get('installation_title')));
