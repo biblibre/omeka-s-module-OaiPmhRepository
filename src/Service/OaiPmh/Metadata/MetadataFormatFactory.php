@@ -65,7 +65,9 @@ class MetadataFormatFactory implements FactoryInterface
                     'class_type' => $classType,
                     'class_type_table' => $classTypeTable,
                     'file_link' => $settings->get('oaipmhrepository_oai_dc_file_link', 'none') ?: 'none',
-                    'file_property' => $settings->get('oaipmhrepository_oai_dc_file_property', 'dcterms:identifier') ?: 'dcterms:identifier',
+                    'iiif_manifest' => $settings->get('oaipmhrepository_oai_dc_iiif_manifest', 'none') ?: 'none',
+                    'file_property' => $settings->get('oaipmhrepository_oai_dc_file_property', 'dcterms:hasPart') ?: 'dcterms:hasPart',
+                    'iiif_manifest_property' => $settings->get('oaipmhrepository_oai_dc_iiif_manifest_property', 'dcterms:hasFormat') ?: 'dcterms:hasFormat',
                 ];
                 break;
             case 'oai_dcterms':

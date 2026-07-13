@@ -324,6 +324,41 @@ Books = resource_template_id[]=3
             ])
 
             ->add([
+                'name' => 'oaipmhrepository_oai_dc_iiif_manifest',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'element_group' => 'files',
+                    'label' => 'Append IIIF manifest link', // @translate
+                    'info' => 'Append the url of the IIIF Presentation manifest of the item. The manifest referenced by a digital object is used when present, else the one built by module IIIF Server or IIIF Presentation.', // @translate
+                    'value_options' => [
+                        'none' => 'None', // @translate
+                        'manifest' => 'IIIF manifest', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dc_iiif_manifest',
+                    'value' => 'none',
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_oai_dc_iiif_manifest_property',
+                'type' => OmekaElement\PropertySelect::class,
+                'options' => [
+                    'element_group' => 'files',
+                    'label' => 'Property for IIIF manifest link', // @translate
+                    'info' => 'The Dublin Core element used for the manifest link is derived from this property (recommended dcterms:hasFormat, so dc:relation).', // @translate
+                    'empty_option' => '',
+                    'term_as_value' => true,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dc_iiif_manifest_property',
+                    'multiple' => false,
+                    'class' => 'chosen-select',
+                    'data-placeholder' => 'Select property…', // @translate
+                    'value' => 'dcterms:hasFormat',
+                ],
+            ])
+            ->add([
                 'name' => 'oaipmhrepository_oai_dc_file_link',
                 'type' => Element\Radio::class,
                 'options' => [

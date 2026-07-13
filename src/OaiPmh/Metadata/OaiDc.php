@@ -134,48 +134,138 @@ class OaiDc extends AbstractMetadata
     }
 
     /**
-     * Append the url of the files of the item (media and digital objects) to
-     * the record, according to the configured file link mode.
+     * Append file links and/or the IIIF manifest link of the item to the
+     * record, according to the configuration.
      *
-     * Modes original/large/medium/square output one url per file; mode iiif
-     * outputs the IIIF Presentation manifest url of the item (one per record),
-     * which is the right granularity for items backed by digital objects, as
-     * the manifest aggregates them.
+     * - file_link (none/original/large/medium/square/iiif): one url per file
+     *   (media and digital objects). "iiif" is the IIIF Image API info.json
+     *   (image server or third party image server).
+     * - iiif_manifest (none/iiifserver/iiif_presentation): the IIIF
+     *   Presentation manifest, built by module IIIF Server or stored by a
+     *   digital object of type IIIF Presentation.
+     *
+     * Both are written to the Dublin Core element derived from the configured
+     * property.
      */
     protected function appendFileLinks(DOMElement $oai, ItemRepresentation $item): void
     {
-        $fileLink = $this->params['oai_dc']['file_link'] ?? 'none';
-        if ($fileLink === 'none') {
+        $params = $this->params['oai_dc'] ?? [];
+        $fileLink = $params['file_link'] ?? 'none';
+        $iiifManifest = $params['iiif_manifest'] ?? 'none';
+        if ($fileLink === 'none' && $iiifManifest === 'none') {
             return;
         }
 
-        $element = $this->dcElementForProperty($this->params['oai_dc']['file_property'] ?? 'dcterms:identifier');
+        $fileElement = $this->dcElementForProperty($params['file_property'] ?? 'dcterms:hasPart');
+        $manifestElement = $this->dcElementForProperty($params['iiif_manifest_property'] ?? 'dcterms:hasFormat');
         $uriAttributes = ['xsi:type' => 'dcterms:URI'];
+        $viewHelpers = $this->services->get('ViewHelperManager');
 
-        // Mode iiif: one manifest url for the whole item (covers media and
-        // digital objects). Requires module IiifServer.
-        if ($fileLink === 'iiif') {
-            $viewHelpers = $this->services->get('ViewHelperManager');
-            if (!$viewHelpers->has('iiifUrl')) {
-                return;
+        // Per-file links: media and digital objects (linked through values).
+        if ($fileLink !== 'none') {
+            foreach ($this->itemFiles($item) as $file) {
+                $url = $this->fileLinkUrl($file, $fileLink, $viewHelpers);
+                if ($url) {
+                    $this->appendNewElement($oai, $fileElement, $url, $uriAttributes);
+                }
             }
-            $url = $viewHelpers->get('iiifUrl')->__invoke($item, 'iiifserver/manifest', '2');
-            if ($url) {
-                $this->appendNewElement($oai, $element, $url, $uriAttributes);
-            }
-            return;
         }
 
-        // Per-file modes: standard media and digital objects (linked to the
-        // item through resource values).
+        // IIIF manifest link, resolved automatically.
+        if ($iiifManifest !== 'none') {
+            foreach ($this->iiifManifestUrls($item, $viewHelpers) as $url) {
+                $this->appendNewElement($oai, $manifestElement, $url, $uriAttributes);
+            }
+        }
+    }
+
+    /**
+     * Resolve the IIIF Presentation manifest url(s) of an item.
+     *
+     * A digital object that references an external manifest (type IIIF
+     * Presentation) is authoritative and used as is. Otherwise the manifest is
+     * built by whichever manifest module is installed (IIIF Server or IIIF
+     * Presentation).
+     *
+     * @return string[]
+     */
+    protected function iiifManifestUrls(ItemRepresentation $item, $viewHelpers): array
+    {
+        // External manifests referenced by digital objects.
+        $stored = [];
         foreach ($this->itemFiles($item) as $file) {
-            $url = $fileLink === 'original'
-                ? $file->originalUrl()
-                : $file->thumbnailDisplayUrl($fileLink);
-            if ($url) {
-                $this->appendNewElement($oai, $element, $url, $uriAttributes);
+            if (method_exists($file, 'renderer')
+                && $file->renderer() === 'iiif_presentation'
+                && ($url = $file->source())
+            ) {
+                $stored[] = $url;
             }
         }
+        if ($stored) {
+            return $stored;
+        }
+
+        // Manifest built by module IIIF Server.
+        if ($viewHelpers->has('iiifUrl')) {
+            $url = $viewHelpers->get('iiifUrl')->__invoke($item, 'iiifserver/manifest', '2');
+            return $url ? [$url] : [];
+        }
+
+        // Manifest built by module IIIF Presentation.
+        if (class_exists('IiifPresentation\Module', false)) {
+            try {
+                $url = $viewHelpers->get('url')->__invoke(
+                    'iiif-presentation-2/item/manifest',
+                    ['item-id' => $item->id()],
+                    ['force_canonical' => true]
+                );
+                return $url ? [$url] : [];
+            } catch (\Throwable $e) {
+                return [];
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * Build the url of a single file according to the file link mode.
+     *
+     * @param \Omeka\Api\Representation\AbstractResourceEntityRepresentation $file
+     * @param \Laminas\View\HelperPluginManager $viewHelpers
+     */
+    protected function fileLinkUrl($file, string $mode, $viewHelpers): ?string
+    {
+        if ($mode === 'original') {
+            return $file->originalUrl();
+        }
+
+        if ($mode === 'iiif') {
+            // Remote IIIF image service (digital object or core IIIF media):
+            // the stored info.json id is the service base.
+            if (method_exists($file, 'renderer')
+                && $file->renderer() === 'iiif'
+                && method_exists($file, 'mediaData')
+            ) {
+                $data = $file->mediaData();
+                $serviceId = is_array($data) ? ($data['id'] ?? $data['@id'] ?? null) : null;
+                return is_string($serviceId) && $serviceId !== ''
+                    ? rtrim($serviceId, '/') . '/info.json'
+                    : null;
+            }
+            // Local file served by the image server (module IIIF Server).
+            if ($viewHelpers->has('iiifMediaUrl')) {
+                try {
+                    return $viewHelpers->get('iiifMediaUrl')->__invoke($file) ?: null;
+                } catch (\Throwable $e) {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        // Thumbnail sizes: large / medium / square.
+        return $file->thumbnailDisplayUrl($mode);
     }
 
     /**
