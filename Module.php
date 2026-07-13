@@ -166,8 +166,13 @@ class Module extends AbstractModule
 
     public function filterOaiPmhRepositoryValuesPre(Event $event): void
     {
-        $this->mapDublinCoreTerms($event);
+        // Apply custom property mapping first so that values mapped onto
+        // refined dcterms (e.g. mdb:* => dcterms:alternative) are present
+        // before the refined-to-generic Dublin Core merge, allowing them to
+        // cascade down to the 15 base elements in oai_dc and the other generic
+        // formats.
         $this->mapOtherProperties($event);
+        $this->mapDublinCoreTerms($event);
     }
 
     protected function mapDublinCoreTerms(Event $event): void
@@ -219,14 +224,10 @@ class Module extends AbstractModule
             if (empty($values[$sourceTerm]['values'])) {
                 continue;
             }
-            if (empty($values[$destinationTerm]['values'])) {
-                $values[$destinationTerm]['values'] = array_values($values[$sourceTerm]['values']);
-            } else {
-                $values[$destinationTerm]['values'] = array_merge(
-                    array_values($values[$destinationTerm]['values']),
-                    array_values($values[$sourceTerm]['values'])
-                );
-            }
+            $values[$destinationTerm]['values'] = $this->appendUniqueValues(
+                $values[$destinationTerm]['values'] ?? [],
+                array_values($values[$sourceTerm]['values'])
+            );
         }
 
         $event->setParam('values', $values);
@@ -318,17 +319,52 @@ class Module extends AbstractModule
             if (empty($values[$sourceTerm]['values'])) {
                 continue;
             }
-            if (empty($values[$destinationTerm]['values'])) {
-                $values[$destinationTerm]['values'] = array_values($values[$sourceTerm]['values']);
-            } else {
-                $values[$destinationTerm]['values'] = array_merge(
-                    array_values($values[$destinationTerm]['values']),
-                    array_values($values[$sourceTerm]['values'])
-                );
-            }
+            $values[$destinationTerm]['values'] = $this->appendUniqueValues(
+                $values[$destinationTerm]['values'] ?? [],
+                array_values($values[$sourceTerm]['values'])
+            );
         }
 
         $event->setParam('values', $values);
+    }
+
+    /**
+     * Append values to a list, skipping any whose rendered signature (type +
+     * literal value + uri + linked resource id) already exists, so that mapping
+     * a property onto another that already carries the same value does not
+     * produce duplicate elements in the output.
+     */
+    protected function appendUniqueValues(array $existing, array $additional): array
+    {
+        $signatures = [];
+        foreach ($existing as $value) {
+            $signatures[$this->valueSignature($value)] = true;
+        }
+        foreach ($additional as $value) {
+            $signature = $this->valueSignature($value);
+            if (!isset($signatures[$signature])) {
+                $existing[] = $value;
+                $signatures[$signature] = true;
+            }
+        }
+        return array_values($existing);
+    }
+
+    /**
+     * Build a comparison signature for a value representation.
+     */
+    protected function valueSignature($value): string
+    {
+        if (!is_object($value)) {
+            return (string) $value;
+        }
+        $valueResource = method_exists($value, 'valueResource') ? $value->valueResource() : null;
+        return implode("\0", [
+            method_exists($value, 'type') ? (string) $value->type() : '',
+            method_exists($value, 'value') ? (string) $value->value() : '',
+            method_exists($value, 'uri') ? (string) $value->uri() : '',
+            $valueResource ? (string) $valueResource->id() : '',
+        ]);
     }
 
     protected function getServerNameWithoutProtocol($serviceLocator)
