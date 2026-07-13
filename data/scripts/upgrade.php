@@ -33,7 +33,8 @@ if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActi
         $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
         'Common', '3.4.88'
     );
-    throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
+    $messenger->addError($message);
+    throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $translate('Missing requirement. Unable to upgrade.')); // @translate
 }
 
 if (version_compare($oldVersion, '0.3', '<')) {
@@ -271,4 +272,23 @@ if (version_compare($oldVersion, '3.4.12', '<')) {
     );
     $message->setEscapeHtml(false);
     $messenger->addSuccess($message);
+}
+
+if (version_compare($oldVersion, '3.4.14', '<')) {
+    // The file and manifest options are no longer specific to oai_dc: they now
+    // apply to all Dublin Core formats, so their setting keys lost the oai_dc
+    // prefix. Carry any existing value over to the new key.
+    $renamedSettings = [
+        'oaipmhrepository_oai_dc_file_link' => 'oaipmhrepository_file_link',
+        'oaipmhrepository_oai_dc_file_property' => 'oaipmhrepository_file_property',
+        'oaipmhrepository_oai_dc_iiif_manifest' => 'oaipmhrepository_iiif_manifest',
+        'oaipmhrepository_oai_dc_iiif_manifest_property' => 'oaipmhrepository_iiif_manifest_property',
+    ];
+    foreach ($renamedSettings as $old => $new) {
+        $value = $settings->get($old);
+        if ($value !== null) {
+            $settings->set($new, $value);
+            $settings->delete($old);
+        }
+    }
 }
