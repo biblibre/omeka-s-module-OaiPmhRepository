@@ -619,6 +619,10 @@ class ConfigForm extends Form
 
         $this->getInputFilter()
             ->add([
+                'name' => 'oaipmhrepository_oai_identifier_property',
+                'required' => false,
+            ])
+            ->add([
                 'name' => 'oaipmhrepository_generic_dcterms',
                 'required' => false,
             ])
