@@ -64,6 +64,8 @@ class MetadataFormatFactory implements FactoryInterface
                     'bnf_vignette' => $settings->get('oaipmhrepository_oai_dc_bnf_vignette', 'none') ?: 'none',
                     'class_type' => $classType,
                     'class_type_table' => $classTypeTable,
+                    'file_link' => $settings->get('oaipmhrepository_oai_dc_file_link', 'none') ?: 'none',
+                    'file_property' => $settings->get('oaipmhrepository_oai_dc_file_property', 'dcterms:identifier') ?: 'dcterms:identifier',
                 ];
                 break;
             case 'oai_dcterms':

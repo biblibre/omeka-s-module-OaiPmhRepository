@@ -129,5 +129,105 @@ class OaiDc extends AbstractMetadata
                 $this->appendNewElement($oai, 'dc:identifier', $media->originalUrl(), $formatUriAttributes);
             }
         }
+
+        $this->appendFileLinks($oai, $item);
+    }
+
+    /**
+     * Append the url of the files of the item (media and digital objects) to
+     * the record, according to the configured file link mode.
+     *
+     * Modes original/large/medium/square output one url per file; mode iiif
+     * outputs the IIIF Presentation manifest url of the item (one per record),
+     * which is the right granularity for items backed by digital objects, as
+     * the manifest aggregates them.
+     */
+    protected function appendFileLinks(DOMElement $oai, ItemRepresentation $item): void
+    {
+        $fileLink = $this->params['oai_dc']['file_link'] ?? 'none';
+        if ($fileLink === 'none') {
+            return;
+        }
+
+        $element = $this->dcElementForProperty($this->params['oai_dc']['file_property'] ?? 'dcterms:identifier');
+        $uriAttributes = ['xsi:type' => 'dcterms:URI'];
+
+        // Mode iiif: one manifest url for the whole item (covers media and
+        // digital objects). Requires module IiifServer.
+        if ($fileLink === 'iiif') {
+            $viewHelpers = $this->services->get('ViewHelperManager');
+            if (!$viewHelpers->has('iiifUrl')) {
+                return;
+            }
+            $url = $viewHelpers->get('iiifUrl')->__invoke($item, 'iiifserver/manifest', '2');
+            if ($url) {
+                $this->appendNewElement($oai, $element, $url, $uriAttributes);
+            }
+            return;
+        }
+
+        // Per-file modes: standard media and digital objects (linked to the
+        // item through resource values).
+        foreach ($this->itemFiles($item) as $file) {
+            $url = $fileLink === 'original'
+                ? $file->originalUrl()
+                : $file->thumbnailDisplayUrl($fileLink);
+            if ($url) {
+                $this->appendNewElement($oai, $element, $url, $uriAttributes);
+            }
+        }
+    }
+
+    /**
+     * Collect the file-backed resources of an item: standard media plus digital
+     * objects referenced through resource values.
+     *
+     * @return \Omeka\Api\Representation\AbstractResourceEntityRepresentation[]
+     */
+    protected function itemFiles(ItemRepresentation $item): array
+    {
+        $files = [];
+        foreach ($item->media() as $media) {
+            $files[] = $media;
+        }
+        foreach ($item->values() as $propertyData) {
+            foreach ($propertyData['values'] as $value) {
+                $valueResource = $value->valueResource();
+                if ($valueResource && $valueResource->resourceName() === 'digital_objects') {
+                    $files[$valueResource->id()] = $valueResource;
+                }
+            }
+        }
+        return array_values($files);
+    }
+
+    /**
+     * Derive the Dublin Core element name (dc:*) from a dcterms property,
+     * following the DCMI dumb-down. Defaults to dc:identifier.
+     */
+    protected function dcElementForProperty(string $term): string
+    {
+        static $simple = [
+            'contributor', 'coverage', 'creator', 'date', 'description', 'format',
+            'identifier', 'language', 'publisher', 'relation', 'rights', 'source',
+            'subject', 'title', 'type',
+        ];
+        static $refinements = [
+            'hasFormat' => 'relation', 'isFormatOf' => 'relation', 'hasPart' => 'relation',
+            'isPartOf' => 'relation', 'hasVersion' => 'relation', 'isVersionOf' => 'relation',
+            'references' => 'relation', 'isReferencedBy' => 'relation', 'replaces' => 'relation',
+            'isReplacedBy' => 'relation', 'requires' => 'relation', 'isRequiredBy' => 'relation',
+            'conformsTo' => 'relation', 'bibliographicCitation' => 'identifier',
+            'extent' => 'format', 'medium' => 'format', 'abstract' => 'description',
+            'tableOfContents' => 'description', 'provenance' => 'description',
+            'spatial' => 'coverage', 'temporal' => 'coverage', 'accessRights' => 'rights',
+            'license' => 'rights', 'alternative' => 'title',
+        ];
+
+        $local = strpos($term, ':') === false ? $term : substr($term, strpos($term, ':') + 1);
+        if (in_array($local, $simple, true)) {
+            return 'dc:' . $local;
+        }
+        return 'dc:' . ($refinements[$local] ?? 'identifier');
     }
 }

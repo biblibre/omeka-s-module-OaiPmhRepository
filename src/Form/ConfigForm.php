@@ -324,6 +324,46 @@ Books = resource_template_id[]=3
             ])
 
             ->add([
+                'name' => 'oaipmhrepository_oai_dc_file_link',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'element_group' => 'files',
+                    'label' => 'Append file links', // @translate
+                    'info' => 'Append the url of the files (media and digital objects) of the item to each record, using the chosen size or the IIIF image info.json (image server or third party image server).', // @translate
+                    'value_options' => [
+                        'none' => 'None', // @translate
+                        'original' => 'Original', // @translate
+                        'large' => 'Large', // @translate
+                        'medium' => 'Medium', // @translate
+                        'square' => 'Square', // @translate
+                        'iiif' => 'IIIF image info.json (image server or third party)', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dc_file_link',
+                    'value' => 'none',
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_oai_dc_file_property',
+                'type' => OmekaElement\PropertySelect::class,
+                'options' => [
+                    'element_group' => 'files',
+                    'label' => 'Property for file links', // @translate
+                    'info' => 'The Dublin Core element used for the file links is derived from this property (recommended dcterms:hasPart, so dc:relation).', // @translate
+                    'empty_option' => '',
+                    'term_as_value' => true,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dc_file_property',
+                    'multiple' => false,
+                    'class' => 'chosen-select',
+                    'data-placeholder' => 'Select property…', // @translate
+                    'value' => 'dcterms:hasPart',
+                ],
+            ])
+
+            ->add([
                 'name' => 'oaipmhrepository_oai_dc_class_type',
                 'type' => Element\Radio::class,
                 'options' => [
