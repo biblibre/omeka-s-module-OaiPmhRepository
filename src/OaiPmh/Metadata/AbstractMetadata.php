@@ -111,6 +111,62 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         return $this;
     }
 
+    public function getParams(): array
+    {
+        return $this->params;
+    }
+
+    /**
+     * Optional Mapper-based serialization for the current metadata prefix.
+     *
+     * Looks up the mapping name in three places, in order of precedence:
+     *   1. params[<prefix>][mapper]   (per-format admin override)
+     *   2. params[mapper][<prefix>]   (legacy nested layout)
+     *   3. 'omeka_to_<prefix>'        (convention)
+     *
+     * Returns true if the Mapper module produced a DOM that was grafted under
+     * $metadataElement; false otherwise (caller falls back to its native code
+     * path). Any failure (module missing, mapping unknown, empty result) is
+     * treated as a graceful skip.
+     */
+    protected function appendMetadataViaMapper(DOMElement $metadataElement, ItemRepresentation $item): bool
+    {
+        $prefix = $this->getMetadataPrefix();
+        if (!$prefix) {
+            return false;
+        }
+
+        $mappingName = $this->params[$prefix]['mapper']
+            ?? $this->params['mapper'][$prefix]
+            ?? null;
+
+        // Convention default: opt-in only when params['mapper']['enabled'] is
+        // true, so the legacy formatter remains the default behavior.
+        if (!$mappingName && !empty($this->params['mapper']['enabled'])) {
+            $mappingName = 'omeka_to_' . $prefix;
+        }
+
+        if (!$mappingName || !$this->services || !$this->services->has('Mapper\Mapper')) {
+            return false;
+        }
+
+        /** @var \Mapper\Stdlib\Mapper $mapper */
+        $mapper = $this->services->get('Mapper\Mapper');
+        $mapper->setMappingName((string) $mappingName);
+        if (!$mapper->getMapping()) {
+            return false;
+        }
+
+        $serialized = $mapper->serialize($item);
+        if (!$serialized instanceof \DOMDocument || !$serialized->documentElement) {
+            return false;
+        }
+
+        $imported = $metadataElement->ownerDocument->importNode($serialized->documentElement, true);
+        $metadataElement->appendChild($imported);
+        return true;
+    }
+
     public function declareMetadataFormat(DOMElement $parent)
     {
         $elements = [

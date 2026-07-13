@@ -39,6 +39,11 @@ class Lido extends AbstractMetadata
      */
     public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item): void
     {
+        // Optional Mapper-based delegation (see AbstractMetadata).
+        if ($this->appendMetadataViaMapper($metadataElement, $item)) {
+            return;
+        }
+
         $document = $metadataElement->ownerDocument;
 
         $lido = $document->createElementNS(self::METADATA_NAMESPACE, 'lido:lido');

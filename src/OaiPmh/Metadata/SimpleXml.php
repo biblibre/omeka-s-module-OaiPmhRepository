@@ -29,6 +29,11 @@ class SimpleXml extends AbstractMetadata
      */
     public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item): void
     {
+        // Optional Mapper-based delegation (see AbstractMetadata).
+        if ($this->appendMetadataViaMapper($metadataElement, $item)) {
+            return;
+        }
+
         $document = $metadataElement->ownerDocument;
 
         $values = $this->filterValuesPre($item);

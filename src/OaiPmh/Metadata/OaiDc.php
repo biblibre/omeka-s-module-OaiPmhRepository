@@ -36,6 +36,14 @@ class OaiDc extends AbstractMetadata
      */
     public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item): void
     {
+        // Optional Mapper-based delegation factored in AbstractMetadata. Lookup
+        // order: params['oai_dc']['mapper'] / params['mapper']['oai_dc'] /
+        // convention 'omeka_to_oai_dc' when params['mapper']['enabled']. Any
+        // failure (module missing, mapping unknown) falls through.
+        if ($this->appendMetadataViaMapper($metadataElement, $item)) {
+            return;
+        }
+
         $document = $metadataElement->ownerDocument;
 
         $oai = $document->createElementNS(self::METADATA_NAMESPACE, 'oai_dc:dc');

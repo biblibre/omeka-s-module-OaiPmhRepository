@@ -22,7 +22,10 @@ class MetadataFormatFactory implements FactoryInterface
         $metadataFormat = new $requestedName();
         $prefix = $metadataFormat->getMetadataPrefix();
 
-        $isGlobalRepository = !$plugins->get('params')->fromRoute('__SITE__', false);
+        // Read current site from matched route directly for jobs and tests.
+        $mvcEvent = $services->get('Application')->getMvcEvent();
+        $routeMatch = $mvcEvent ? $mvcEvent->getRouteMatch() : null;
+        $isGlobalRepository = !($routeMatch && $routeMatch->getParam('__SITE__', false));
 
         $mainSite = $settings->get('default_site');
         if ($mainSite) {
