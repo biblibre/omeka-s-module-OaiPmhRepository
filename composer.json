@@ -1,8 +1,20 @@
 {
     "name": "daniel-km/omeka-s-module-oai-pmh-repository",
-    "description": "Exposes items as an OAI-PMH repository (module for Omeka S).",
-    "type": "library",
-    "license": "GPL-3.0",
+    "type": "omeka-s-module",
+    "description": "Module for Omeka S: Exposes Omeka items as an OAI-PMH repository.",
+    "keywords": [
+        "Omeka S",
+        "Omeka S module",
+        "share",
+        "open data",
+        "library protocol",
+        "dublin core",
+        "mets",
+        "mods",
+        "cdwalite"
+    ],
+    "license": "GPL-3.0-or-later",
+    "homepage": "https://gitlab.com/Daniel-KM/omeka-s-module-OaiPmhRepository",
     "authors": [
         {
             "name": "Daniel Berthereau",
@@ -45,24 +57,14 @@
             "email": "john@zerocrates.org"
         }
     ],
-    "homepage": "https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository",
     "support": {
-        "issues": "https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/issues",
+        "issues": "https://gitlab.com/Daniel-KM/omeka-s-module-OaiPmhRepository/-/issues",
         "forum": "https://forum.omeka.org/"
     },
-    "keywords": [
-        "Omeka S",
-        "module",
-        "share",
-        "open data",
-        "library protocol",
-        "OAI-PMH",
-        "Dublin Core",
-        "METS",
-        "MODS",
-        "CDWA Lite",
-        "LIDO"
-    ],
+    "_require (not set until Omeka S merges PR #2412)": {
+        "omeka/omeka-s": "^4.0",
+        "daniel-km/omeka-s-module-common": "*"
+    },
     "autoload": {
         "psr-4": {
             "OaiPmhRepository\\": "src/"
@@ -76,13 +78,10 @@
     "config": {
         "platform": {
             "php": "7.4"
-        },
-        "allow-plugins": {
-            "composer/installers": true,
-            "oomphinc/composer-installers-extender": true
         }
     },
     "extra": {
-        "installer-name": "OaiPmhRepository"
+        "installer-name": "OaiPmhRepository",
+        "configurable": true
     }
 }
