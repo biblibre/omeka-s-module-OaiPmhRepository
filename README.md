@@ -37,6 +37,15 @@ uncompress it in the `modules` directory.
 If the module was installed from the source, rename the name of the folder of
 the module to `OaiPmhRepository`.
 
+* For test
+
+The module includes a comprehensive test suite with unit and functional tests.
+Run them from the root of Omeka:
+
+```sh
+vendor/bin/phpunit -c modules/OaiPmhRepository/phpunit.xml --testdox
+```
+
 
 Config
 ------
@@ -46,6 +55,19 @@ server for each site, if wanted, to manage the case where there are multiple
 institutional entities that share the same Omeka S server. Nevertheless, all
 options are defined globally in order to keep consistency between servers, in
 particulars for the identifiers of the sets and the items.
+
+### Endpoints
+
+The urls to give to the harvesters are:
+
+- global repository: `/oai`
+- site repository: `/s/{site-slug}/oai`
+
+So, for example, `https://example.org/oai?verb=Identify`.
+
+No other path answers by default. In particular, the old Omeka Classic path
+`/oai-pmh-repository/request` returns a 404 until it is set explicitly (see below
+[Global repository redirect route]).
 
 ### Repository name
 
@@ -78,11 +100,11 @@ Select the formats that will be available. Only `oai_dc` is required.
 
 ### Expose media
 
-Whether the repository should expose direct URLs to all the files associated
-with an item as part of its returned metadata. This gives harvesters the ability
-to directly access the media described by the metadata.
+Master switch (tab "Files") for exposing the files of an item to harvesters.
+When enabled, files are exposed according to the file link and IIIF manifest
+options below. When disabled, no file is exposed, whatever those options.
 
-Default: true
+Default: false
 
 ### Hide empty oai sets
 
@@ -127,6 +149,43 @@ maps Bibliographic Ontology (bibo) and Friend of a Friend (foaf) into Dublin Cor
 Of course is not perfect, but you can adapt it to your real data. See the default
 For foaf, a [spreadsheet] can help to improve the mapping.
 
+### Files (tab "Files")
+
+These options append links to the files of each item (standard media and digital
+objects of the module Digital Object) inside the Dublin Core records (`oai_dc`
+and `oai_dcterms`). They only apply when **Expose media** is enabled.
+
+#### Append file links
+
+Append one url per file of the item:
+
+- `None`: nothing is added.
+- `Original` / `Large` / `Medium` / `Square`: the original file or the thumbnail
+  of the chosen size.
+- `IIIF image info.json`: the IIIF Image API `info.json`, served by the local
+  image server (module IIIF Server / Image Server) for local files, or by the
+  third party image server referenced by a digital object.
+
+Default: None
+
+#### Append IIIF manifest link
+
+Append the url of the IIIF Presentation manifest of the item (`None` / `IIIF
+manifest`). The source is resolved automatically: the manifest referenced by a
+digital object of type IIIF Presentation is used when present (it is the
+authoritative one); otherwise the manifest built by the module IIIF Server, or
+by the module IIIF Presentation, whichever is installed.
+
+Default: None
+
+#### Property for file links / Property for IIIF manifest link
+
+The element used for each link is derived from the chosen property. Recommended:
+`dcterms:hasPart` for file links and `dcterms:hasFormat` for the manifest. In
+`oai_dc` the property is dumbed down to a simple element (both become
+`dc:relation`); in `oai_dcterms` the property term is kept as is
+(`dcterms:hasPart`). Links carry `xsi:type="dcterms:URI"`.
+
 ### Metadata for mets (item and media)
 
 Mets can use any format to describe the item and the files. The formats that are
@@ -144,6 +203,11 @@ css file can be copied and updated as well.
 An alias (redirect 301) for backward compatibility with Omeka Classic, that used
 `/oai-pmh-repository/request`, or any other old OAI-PMH repository, so the
 harvesters will continue to harvest your metadata.
+
+This option is empty by default, so there is no alias and no redirect. To enable
+it, fill the field with the old path, for example `/oai-pmh-repository/request`:
+only then will that path redirect (301) to `/oai`. The alias applies to the
+global repository only.
 
 ### List response limit
 
@@ -322,6 +386,7 @@ written by John Flatness, and many more.
 [installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
 [Common]: https://gitlab.com/Daniel-KM/Omeka-S-module-Common
 [OaiPmhRepository.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/releases
+[Global repository redirect route]: #global-repository-redirect-route
 [Bootstrap]: https://getbootstrap.com
 [default mapping]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130
 [spreadsheet]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/foaf_to_dcterms.ods
