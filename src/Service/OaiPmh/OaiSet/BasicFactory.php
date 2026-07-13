@@ -2,7 +2,7 @@
 
 namespace OaiPmhRepository\Service\OaiPmh\OaiSet;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use OaiPmhRepository\OaiPmh\OaiSet\Basic;
 

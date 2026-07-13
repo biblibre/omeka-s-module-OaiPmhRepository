@@ -2,7 +2,7 @@
 
 namespace OaiPmhRepository\Service\Form;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use OaiPmhRepository\Form\ConfigForm;
 use OaiPmhRepository\OaiPmh\MetadataFormatManager;
