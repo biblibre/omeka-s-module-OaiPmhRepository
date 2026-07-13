@@ -18,6 +18,19 @@ class ConfigForm extends Form
      */
     protected $oaiSetFormats;
 
+    /**
+     * @var array
+     */
+    protected $elementTabs = [
+        'general' => 'General', // @translate
+        'sets' => 'Sets and repositories', // @translate
+        'formatting' => 'Metadata formatting', // @translate
+        'files' => 'Files', // @translate
+        'dublin_core' => 'Dublin Core and BnF', // @translate
+        'mets' => 'Mets', // @translate
+        'advanced' => 'Interface and performance', // @translate
+    ];
+
     public function init(): void
     {
         $valueOptionFormats = $this->getMetadataFormats();
@@ -27,10 +40,12 @@ class ConfigForm extends Form
         $valueOptionOaiSets = array_combine($valueOptionOaiSets, array_map('ucfirst', $valueOptionOaiSets));
 
         $this
+            ->setOption('element_tabs', $this->elementTabs)
             ->add([
                 'name' => 'oaipmhrepository_name',
                 'type' => Element\Text::class,
                 'options' => [
+                    'tab' => 'general',
                     'label' => 'Repository name', // @translate
                     'info' => 'Name for this OAI-PMH repository.', // @translate
                 ],
@@ -43,6 +58,7 @@ class ConfigForm extends Form
                 'name' => 'oaipmhrepository_namespace_id',
                 'type' => Element\Text::class,
                 'options' => [
+                    'tab' => 'general',
                     'label' => 'Namespace identifier', // @translate
                     'info' => 'This will be used to form globally unique IDs for the exposed metadata items. This value is required to be a domain name you have registered. Using other values will generate invalid identifiers.', // @translate
                 ],
@@ -55,6 +71,7 @@ class ConfigForm extends Form
                 'name' => 'oaipmhrepository_oai_identifier_property',
                 'type' => OmekaElement\PropertySelect::class,
                 'options' => [
+                    'tab' => 'general',
                     'label' => 'OAI identifier property', // @translate
                     'info' => 'Use a property value (e.g. dcterms:identifier) instead of the internal id as the local identifier in OAI-PMH responses. This allows compatibility with modules like Clean Url. If empty or no value is found, the internal id is used.', // @translate
                     'empty_option' => '',
@@ -72,6 +89,7 @@ class ConfigForm extends Form
                 'name' => 'oaipmhrepository_metadata_formats',
                 'type' => Element\Select::class,
                 'options' => [
+                    'tab' => 'general',
                     'label' => 'Metadata formats', // @translate
                     'info' => 'The format that will be made available. oai_dc is required.', // @translate
                     'value_options' => $valueOptionFormats,
@@ -88,6 +106,7 @@ class ConfigForm extends Form
                 'name' => 'oaipmhrepository_expose_media',
                 'type' => Element\Checkbox::class,
                 'options' => [
+                    'tab' => 'general',
                     'label' => 'Expose media', // @translate
                     'info' => 'Whether the plugin should include identifiers for the files associated with items. This provides harvesters with direct access to files.', // @translate
                 ],
@@ -99,6 +118,7 @@ class ConfigForm extends Form
                 'name' => 'oaipmhrepository_hide_empty_sets',
                 'type' => Element\Checkbox::class,
                 'options' => [
+                    'tab' => 'sets',
                     'label' => 'Hide empty oai sets', // @translate
                     'info' => 'Whether the module should hide empty oai sets.', // @translate
                 ],
@@ -110,6 +130,7 @@ class ConfigForm extends Form
                 'name' => 'oaipmhrepository_global_repository',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'sets',
                     'label' => 'Global repository', // @translate
                     'info' => 'The global repository contains all the resources of Omeka S, in one place. Note that the oai set identifiers are different (item set id or site id).', // @translate
                     'value_options' => [
@@ -129,6 +150,7 @@ class ConfigForm extends Form
                 'name' => 'oaipmhrepository_list_item_sets',
                 'type' => OmekaElement\ItemSetSelect::class,
                 'options' => [
+                    'tab' => 'sets',
                     'label' => 'List of item sets for the global repository', // @translate
                     'empty_option' => '',
                 ],
@@ -144,22 +166,25 @@ class ConfigForm extends Form
                 'name' => 'oaipmhrepository_sets_queries',
                     'type' => OmekaElement\ArrayTextarea::class,
                     'options' => [
+                        'tab' => 'sets',
                         'label' => 'Dynamic sets based on advanced search queries', // @translate
                         'as_key_value' => true,
                     ],
                     'attributes' => [
                         'id' => 'oaipmhrepository_sets_queries',
                         'required' => false,
-                        'placeholder' => 'Articles = resource_template_id[]=2
-Books = resource_template_id[]=3
-',
-                        'rows' => 5,
+                        'placeholder' => <<<'TXT'
+                            Articles = resource_template_id[]=2
+                            Books = resource_template_id[]=3
+                            TXT,
+                        'rows' => 10,
                     ],
                 ])
             ->add([
                 'name' => 'oaipmhrepository_by_site_repository',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'sets',
                     'label' => 'Site repositories', // @translate
                     'info' => 'The site repositories simulate multiple oai servers, with the site pools of items and the attached item sets as oai sets.', // @translate
                     'value_options' => [
@@ -176,6 +201,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_append_identifier_global',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'sets',
                     'label' => 'Add identifier for global repository', // @translate
                     'info' => 'An identifier may be added to simplify harvests, in particular when there is no unique identifier (ark, noid, call number, etc.). Only one identifier may be added and it can be the api url or a site specific url. Some formats add their own identifier and other ones skip this option.', // @translate
                     'value_options' => [
@@ -193,6 +219,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_append_identifier_site',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'sets',
                     'label' => 'Add identifier for site repositories', // @translate
                     'info' => 'An identifier may be added to simplify harvests, in particular when there is no unique identifier (ark, noid, call number, etc.). Only one identifier may be added and it can be the api url or a site specific url. Some formats add their own identifier and other ones skip this option.', // @translate
                     'value_options' => [
@@ -206,11 +233,11 @@ Books = resource_template_id[]=3
                     'id' => 'oaipmhrepository_append_identifier_site',
                 ],
             ])
-
             ->add([
                 'name' => 'oaipmhrepository_oai_set_format',
                 'type' => Element\Select::class,
                 'options' => [
+                    'tab' => 'sets',
                     'label' => 'Oai set format', // @translate
                     'info' => 'The format of the oai set identifiers.', // @translate
                     'value_options' => $valueOptionOaiSets,
@@ -220,10 +247,12 @@ Books = resource_template_id[]=3
                     'required' => 'true',
                 ],
             ])
+
             ->add([
                 'name' => 'oaipmhrepository_generic_dcterms',
                 'type' => Element\MultiCheckbox::class,
                 'options' => [
+                    'tab' => 'formatting',
                     'label' => 'Genericize dcterms for specific formats', // @translate
                     'info' => 'Use refined terms for Dublin Core elements, for example dcterms:abstract will be merged with dc:description. It allows to expose all metadata in the standard oai_dc. For other merges, the event "oaipmhrepository.values.pre" can be used.', // @translate
                     'value_options' => [
@@ -242,6 +271,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_map_properties',
                 'type' => OmekaElement\ArrayTextarea::class,
                 'options' => [
+                    'tab' => 'formatting',
                     'label' => 'Map properties', // @translate
                     'info' => 'Map any property to any other property, so they will be available in other formats, in particular "oai_dcterms" and "oai_dc".', // @translate
                     'as_key_value' => true,
@@ -249,7 +279,7 @@ Books = resource_template_id[]=3
                 'attributes' => [
                     'id' => 'oaipmhrepository_map_properties',
                     'placeholder' => 'bibo:shortTitle = dcterms:alternative',
-                    'rows' => 5,
+                    'rows' => 12,
                 ],
             ])
 
@@ -257,6 +287,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_format_literal_striptags',
                 'type' => Element\MultiCheckbox::class,
                 'options' => [
+                    'tab' => 'formatting',
                     'label' => 'Format of literal and other data: strip xml and html tags', // @translate
                     'value_options' => $valueOptionFormats,
                 ],
@@ -268,6 +299,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_format_resource',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'formatting',
                     'label' => 'Format of linked resources', // @translate
                     'value_options' => [
                         'url_attr_title' => 'Omeka url as text and title as attribute', // @translate
@@ -290,6 +322,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_format_resource_property',
                 'type' => OmekaElement\PropertySelect::class,
                 'options' => [
+                    'tab' => 'formatting',
                     'label' => 'Property for linked resources', // @translate
                     'term_as_value' => true,
                 ],
@@ -305,6 +338,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_format_uri',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'formatting',
                     'label' => 'Format of uri', // @translate
                     'value_options' => [
                         'uri_attr_label' => 'Uri as text and label as attribute', // @translate
@@ -324,45 +358,10 @@ Books = resource_template_id[]=3
             ])
 
             ->add([
-                'name' => 'oaipmhrepository_oai_dc_iiif_manifest',
-                'type' => Element\Radio::class,
-                'options' => [
-                    'element_group' => 'files',
-                    'label' => 'Append IIIF manifest link', // @translate
-                    'info' => 'Append the url of the IIIF Presentation manifest of the item. The manifest referenced by a digital object is used when present, else the one built by module IIIF Server or IIIF Presentation.', // @translate
-                    'value_options' => [
-                        'none' => 'None', // @translate
-                        'manifest' => 'IIIF manifest', // @translate
-                    ],
-                ],
-                'attributes' => [
-                    'id' => 'oaipmhrepository_oai_dc_iiif_manifest',
-                    'value' => 'none',
-                ],
-            ])
-            ->add([
-                'name' => 'oaipmhrepository_oai_dc_iiif_manifest_property',
-                'type' => OmekaElement\PropertySelect::class,
-                'options' => [
-                    'element_group' => 'files',
-                    'label' => 'Property for IIIF manifest link', // @translate
-                    'info' => 'The Dublin Core element used for the manifest link is derived from this property (recommended dcterms:hasFormat, so dc:relation).', // @translate
-                    'empty_option' => '',
-                    'term_as_value' => true,
-                ],
-                'attributes' => [
-                    'id' => 'oaipmhrepository_oai_dc_iiif_manifest_property',
-                    'multiple' => false,
-                    'class' => 'chosen-select',
-                    'data-placeholder' => 'Select property…', // @translate
-                    'value' => 'dcterms:hasFormat',
-                ],
-            ])
-            ->add([
                 'name' => 'oaipmhrepository_oai_dc_file_link',
                 'type' => Element\Radio::class,
                 'options' => [
-                    'element_group' => 'files',
+                    'tab' => 'files',
                     'label' => 'Append file links', // @translate
                     'info' => 'Append the url of the files (media and digital objects) of the item to each record, using the chosen size or the IIIF image info.json (image server or third party image server).', // @translate
                     'value_options' => [
@@ -383,7 +382,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_oai_dc_file_property',
                 'type' => OmekaElement\PropertySelect::class,
                 'options' => [
-                    'element_group' => 'files',
+                    'tab' => 'files',
                     'label' => 'Property for file links', // @translate
                     'info' => 'The Dublin Core element used for the file links is derived from this property (recommended dcterms:hasPart, so dc:relation).', // @translate
                     'empty_option' => '',
@@ -397,11 +396,47 @@ Books = resource_template_id[]=3
                     'value' => 'dcterms:hasPart',
                 ],
             ])
+            ->add([
+                'name' => 'oaipmhrepository_oai_dc_iiif_manifest',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'tab' => 'files',
+                    'label' => 'Append IIIF manifest link', // @translate
+                    'info' => 'Append the url of the IIIF Presentation manifest of the item. The manifest referenced by a digital object is used when present, else the one built by module IIIF Server or IIIF Presentation.', // @translate
+                    'value_options' => [
+                        'none' => 'None', // @translate
+                        'manifest' => 'IIIF manifest', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dc_iiif_manifest',
+                    'value' => 'none',
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_oai_dc_iiif_manifest_property',
+                'type' => OmekaElement\PropertySelect::class,
+                'options' => [
+                    'tab' => 'files',
+                    'label' => 'Property for IIIF manifest link', // @translate
+                    'info' => 'The Dublin Core element used for the manifest link is derived from this property (recommended dcterms:hasFormat, so dc:relation).', // @translate
+                    'empty_option' => '',
+                    'term_as_value' => true,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dc_iiif_manifest_property',
+                    'multiple' => false,
+                    'class' => 'chosen-select',
+                    'data-placeholder' => 'Select property…', // @translate
+                    'value' => 'dcterms:hasFormat',
+                ],
+            ])
 
             ->add([
                 'name' => 'oaipmhrepository_oai_dc_class_type',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'dublin_core',
                     'label' => 'Dublin Core: Add the class as Dublin Core type', // @translate
                     'info' => 'For compliance with non-standard requirements of BnF, use a table to map to main types.',//@translate
                     'documentation' => 'https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf',
@@ -422,6 +457,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_oai_dcterms_class_type',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'dublin_core',
                     'label' => 'Dublin Core terms: Add the class as Dublin Core type', // @translate
                     'value_options' => [
                         'no' => 'No', // @translate
@@ -443,6 +479,7 @@ Books = resource_template_id[]=3
                     'name' => 'oaipmhrepository_oai_table_class_type',
                     'type' => \Table\Form\Element\TablesSelect::class,
                     'options' => [
+                        'tab' => 'dublin_core',
                         'label' => 'Dublin Core: Table to use when option above is "table"', // @translate
                     ],
                     'attributes' => [
@@ -456,6 +493,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_oai_dc_bnf_vignette',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'dublin_core',
                     'label' => 'Dublin Core: Append the url of the thumbnail for BnF', // @translate
                     'info' => 'For compliance with the non-standard recommandations of the Bibliothèque nationale de France, the url of the main thumbnail may be automatically included to records.', // @translate
                     'documentation' => 'https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf',
@@ -475,6 +513,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_oai_dcterms_bnf_vignette',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'dublin_core',
                     'label' => 'Dublin Core terms: Append the url of the thumbnail', // @translate
                     'value_options' => [
                         'none' => 'None', // @translate
@@ -493,6 +532,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_mets_data_item',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'mets',
                     'label' => 'Mets: data format for item', // @translate
                     'info' => 'The format of the metadata of item.', // @translate
                     'value_options' => [
@@ -511,6 +551,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_mets_data_media',
                 'type' => Element\Radio::class,
                 'options' => [
+                    'tab' => 'mets',
                     'label' => 'Mets: data format for media', // @translate
                     'info' => 'The format of the metadata of media.', // @translate
                     'value_options' => [
@@ -530,6 +571,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_human_interface',
                 'type' => Element\Checkbox::class,
                 'options' => [
+                    'tab' => 'advanced',
                     'label' => 'Human interface', // @translate
                     'info' => 'The OAI-PMH pages can be displayed with a themable responsive human interface based on Bootstrap (https://getbootstrap.com).', // @translate
                 ],
@@ -541,6 +583,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_redirect_route',
                 'type' => Element\Text::class,
                 'options' => [
+                    'tab' => 'advanced',
                     'label' => 'Global repository redirect route', // @translate
                     'info' => 'An alias (redirect 301) for backward compatibility with Omeka Classic, that used "/oai-pmh-repository/request", or any other old OAI-PMH repository.', // @translate
                 ],
@@ -553,6 +596,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_list_limit',
                 'type' => Element\Number::class,
                 'options' => [
+                    'tab' => 'advanced',
                     'label' => 'List limit', // @translate
                     'info' => 'Number of individual records that can be returned in a response at once. Larger values will increase memory usage but reduce the number of database queries and HTTP requests. Smaller values will reduce memory usage but increase the number of DB queries and requests.', // @translate
                 ],
@@ -564,6 +608,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_token_expiration_time',
                 'type' => Element\Number::class,
                 'options' => [
+                    'tab' => 'advanced',
                     'label' => 'Token expiration time', // @translate
                     'info' => 'In minutes, the length of time a resumption token is valid for. This means harvesters can re-try old partial list requests for this amount of time. Larger values will make the tokens table grow somewhat larger.', // @translate
                 ],

@@ -18,6 +18,7 @@ use Laminas\Mvc\Controller\AbstractController;
 use Laminas\Mvc\MvcEvent;
 use Omeka\Api\Representation\PropertyRepresentation;
 use Omeka\Module\AbstractModule;
+use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * OaiPmhRepository module class.
@@ -33,6 +34,17 @@ class Module extends AbstractModule
         parent::onBootstrap($event);
         $this->addAclRules();
         $this->addRoutes();
+    }
+
+    public function getConfigForm(PhpRenderer $renderer)
+    {
+        // Add the script toggling the fields that depend on another choice.
+        $renderer->headScript()->appendFile(
+            $renderer->assetUrl('js/config-form.js', 'OaiPmhRepository'),
+            'text/javascript',
+            ['defer' => 'defer']
+        );
+        return $this->getConfigFormAuto($renderer);
     }
 
     protected function preInstall(): void
