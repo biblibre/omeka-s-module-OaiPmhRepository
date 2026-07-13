@@ -11,7 +11,7 @@ $options = ['query' => ['verb' => 'Identify']];
 
 <div id="oai-pmh-repository" class="panel">
     <h2><?= $translate('OAI-PMH Repository') ?></h2>
-    <h4><?= $translate('Global repository') ?></h4>
+    <h3><?= $translate('Global repository') ?></h3>
     <p><?php
     switch ($globalRepository):
     case 'none':
@@ -37,7 +37,7 @@ $options = ['query' => ['verb' => 'Identify']];
     </p>
 
     <?php if (in_array($bySiteRepository, ['none', 'item_set'])): ?>
-    <h4><?= $translate('Site repositories') ?></h4>
+    <h3><?= $translate('Site repositories') ?></h3>
     <?php
     switch ($bySiteRepository):
     case 'none': ?>

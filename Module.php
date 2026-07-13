@@ -390,9 +390,9 @@ class Module extends AbstractModule
         $viewHelpers = $serviceLocator->get('ViewHelperManager');
         $serverUrlHelper = $viewHelpers->get('serverUrl');
 
-        $serverName = preg_replace('~(?:\w+://)?([^:]+)(?::\d*)?$~', '$1', $serverUrlHelper->getHost());
+        $serverName = preg_replace('~(?:\w+://)?([^:]+)(?::\d*)?$~', '$1', (string) $serverUrlHelper->getHost());
 
-        $name = preg_replace('/[^a-z0-9\-\.]/i', '', $serverName);
+        $name = preg_replace('/[^a-z0-9\-\.]/i', '', (string) $serverName);
         if (empty($name) || $name === 'localhost') {
             $name = 'default.must.change';
         }
