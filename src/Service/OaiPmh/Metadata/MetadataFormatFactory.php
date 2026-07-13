@@ -50,6 +50,12 @@ class MetadataFormatFactory implements FactoryInterface
             'format_resource' => $settings->get('oaipmhrepository_format_resource', 'url_attr_title'),
             'format_resource_property' => $settings->get('oaipmhrepository_format_resource_property', 'dcterms:identifier'),
             'format_uri' => $settings->get('oaipmhrepository_format_uri', 'uri_attr_label'),
+            // File links are format-agnostic (used by the Dublin Core formats)
+            // and gated by "expose_media".
+            'file_link' => $settings->get('oaipmhrepository_oai_dc_file_link', 'none') ?: 'none',
+            'iiif_manifest' => $settings->get('oaipmhrepository_oai_dc_iiif_manifest', 'none') ?: 'none',
+            'file_property' => $settings->get('oaipmhrepository_oai_dc_file_property', 'dcterms:hasPart') ?: 'dcterms:hasPart',
+            'iiif_manifest_property' => $settings->get('oaipmhrepository_oai_dc_iiif_manifest_property', 'dcterms:hasFormat') ?: 'dcterms:hasFormat',
         ];
 
         switch ($prefix) {
@@ -67,10 +73,6 @@ class MetadataFormatFactory implements FactoryInterface
                     'bnf_vignette' => $settings->get('oaipmhrepository_oai_dc_bnf_vignette', 'none') ?: 'none',
                     'class_type' => $classType,
                     'class_type_table' => $classTypeTable,
-                    'file_link' => $settings->get('oaipmhrepository_oai_dc_file_link', 'none') ?: 'none',
-                    'iiif_manifest' => $settings->get('oaipmhrepository_oai_dc_iiif_manifest', 'none') ?: 'none',
-                    'file_property' => $settings->get('oaipmhrepository_oai_dc_file_property', 'dcterms:hasPart') ?: 'dcterms:hasPart',
-                    'iiif_manifest_property' => $settings->get('oaipmhrepository_oai_dc_iiif_manifest_property', 'dcterms:hasFormat') ?: 'dcterms:hasFormat',
                 ];
                 break;
             case 'oai_dcterms':

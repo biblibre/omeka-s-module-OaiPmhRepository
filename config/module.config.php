@@ -287,6 +287,8 @@ return [
             'oaipmhrepository_oai_table_class_type' => null,
             'oaipmhrepository_oai_dc_file_link' => 'none',
             'oaipmhrepository_oai_dc_file_property' => 'dcterms:hasPart',
+            'oaipmhrepository_oai_dc_iiif_manifest' => 'none',
+            'oaipmhrepository_oai_dc_iiif_manifest_property' => 'dcterms:hasFormat',
             'oaipmhrepository_oai_dc_bnf_vignette' => 'none',
             'oaipmhrepository_oai_dcterms_bnf_vignette' => 'none',
             'oaipmhrepository_mets_data_item' => 'dcterms',

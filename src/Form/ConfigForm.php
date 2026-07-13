@@ -106,9 +106,9 @@ class ConfigForm extends Form
                 'name' => 'oaipmhrepository_expose_media',
                 'type' => Element\Checkbox::class,
                 'options' => [
-                    'tab' => 'general',
+                    'tab' => 'files',
                     'label' => 'Expose media', // @translate
-                    'info' => 'Whether the plugin should include identifiers for the files associated with items. This provides harvesters with direct access to files.', // @translate
+                    'info' => 'Master switch: when enabled, files are exposed to harvesters, according to the file link and IIIF manifest options below. When disabled, no file is exposed, whatever the options.', // @translate
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_expose_media',
