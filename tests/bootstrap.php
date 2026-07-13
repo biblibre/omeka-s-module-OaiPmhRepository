@@ -12,7 +12,7 @@
 require dirname(__DIR__, 3) . '/modules/Common/tests/Bootstrap.php';
 
 \CommonTest\Bootstrap::bootstrap(
-    ['Common', 'OaiPmhRepository'],
+    ['Common', 'OaiPmhRepository', '?Mapper'],
     'OaiPmhRepositoryTest',
     __DIR__ . '/OaiPmhRepositoryTest'
 );

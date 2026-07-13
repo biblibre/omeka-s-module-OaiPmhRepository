@@ -2,7 +2,6 @@
 
 namespace OaiPmhRepositoryTest;
 
-use CommonTest\Bootstrap;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Omeka\Api\Manager as ApiManager;
 use Omeka\Api\Representation\ItemRepresentation;
@@ -32,21 +31,17 @@ trait OaiPmhRepositoryTestTrait
 
     /**
      * Get the service locator.
+     *
+     * Use the application provided by the base test case (cached, with the
+     * proper Omeka type), not Bootstrap::getApplication() which builds a fresh
+     * instance on each call.
      */
     protected function getServiceLocator(): ServiceLocatorInterface
     {
         if ($this->services === null) {
-            $this->services = Bootstrap::getApplication()->getServiceManager();
+            $this->services = $this->getApplication()->getServiceManager();
         }
         return $this->services;
-    }
-
-    /**
-     * Get the application.
-     */
-    protected function getApplication()
-    {
-        return Bootstrap::getApplication();
     }
 
     /**
@@ -200,6 +195,8 @@ trait OaiPmhRepositoryTestTrait
         );
         $format = $metadataFormatManager->get($formatPrefix);
 
+        // Merge the test overrides onto the params the factory already built,
+        // so per-format sub-arrays (params['oai_dc'], params['mets']…) survive.
         $params = [
             'expose_media' => true,
             'oaipmhrepository_name' => $settings->get('installation_title', 'Omeka S'),
@@ -211,7 +208,7 @@ trait OaiPmhRepositoryTestTrait
             'append_identifier_site' => 'api_url',
             'main_site_slug' => null,
         ];
-        $format->setParams($params);
+        $format->setParams(array_merge($format->getParams(), $params));
 
         $oaiSetManager = $services->get(\OaiPmhRepository\OaiPmh\OaiSetManager::class);
         $oaiSet = $oaiSetManager->get('basic');
@@ -220,7 +217,13 @@ trait OaiPmhRepositoryTestTrait
 
         $format->appendMetadata($root, $item);
 
-        return $doc;
+        // Reparse so the prefixed element names (created with createElement,
+        // e.g. "lido:lido") become real namespaced nodes, which DOMXPath needs.
+        // The serialized OAI response is what harvesters actually consume.
+        $reloaded = new \DOMDocument('1.0', 'UTF-8');
+        $reloaded->loadXML($doc->saveXML());
+
+        return $reloaded;
     }
 
     /**

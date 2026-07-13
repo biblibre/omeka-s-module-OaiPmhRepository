@@ -28,18 +28,9 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
         ]);
         $this->itemSet = $response->getContent();
 
-        $response = $this->api()->create('items', [
-            'o:is_public' => true,
-            'dcterms:title' => [
-                [
-                    'type' => 'literal',
-                    'property_id' => $this->getPropertyId('dcterms:title'),
-                    '@value' => 'Fahrenheit 451',
-                ],
-            ],
-        ]);
-        $this->item = $response->getContent();
-
+        // Create the site before the item, so the item can be assigned to the
+        // site pool ("o:site"): the by_site repository filters records with a
+        // "site_id" query, which matches that assignment.
         $response = $this->api()->create('sites', [
             'o:title' => 'Test site',
             'o:slug' => 'test',
@@ -52,6 +43,24 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
             ],
         ]);
         $this->site = $response->getContent();
+
+        $response = $this->api()->create('items', [
+            'o:is_public' => true,
+            'o:site' => [
+                ['o:id' => $this->site->id()],
+            ],
+            'o:item_set' => [
+                ['o:id' => $this->itemSet->id()],
+            ],
+            'dcterms:title' => [
+                [
+                    'type' => 'literal',
+                    'property_id' => $this->getPropertyId('dcterms:title'),
+                    '@value' => 'Fahrenheit 451',
+                ],
+            ],
+        ]);
+        $this->item = $response->getContent();
 
         $this->settings()->set('oaipmhrepository_namespace_id', 'test');
         $this->settings()->set('oaipmhrepository_global_repository', 'none');
@@ -102,7 +111,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/s/test/oai');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -114,7 +123,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/s/test/oai?verb=Identify');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -126,7 +135,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/s/test/oai?verb=ListMetadataFormats');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -148,7 +157,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/s/test/oai?verb=ListIdentifiers&metadataPrefix=lido');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -163,7 +172,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
         $itemIdentifier = 'oai:test:' . $this->item->id();
         $this->dispatch("/s/test/oai?verb=GetRecord&metadataPrefix=lido&identifier=$itemIdentifier");
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -180,7 +189,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/s/test/oai?verb=ListRecords&metadataPrefix=lido');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -194,7 +203,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/s/test/oai?verb=ListSets');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -207,7 +216,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/s/test/oai?verb=ListIdentifiers');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -219,7 +228,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/s/test/oai?verb=ListIdentifiers&metadataPrefix=oai_dc');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -234,7 +243,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
         $itemIdentifier = 'oai:test:' . $this->item->id();
         $this->dispatch("/s/test/oai?verb=GetRecord&metadataPrefix=oai_dc&identifier=$itemIdentifier");
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
@@ -251,7 +260,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/s/test/oai?verb=ListRecords&metadataPrefix=oai_dc');
         $this->assertResponseStatusCode(200);
-        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=UTF-8');
 
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
