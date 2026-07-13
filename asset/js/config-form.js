@@ -39,12 +39,12 @@
         // Master switch: the file options only apply when media is exposed.
         var exposeMedia = document.getElementById(PREFIX + 'expose_media');
         exposeMedia = exposeMedia ? exposeMedia.checked : false;
-        var fileLink = radioValue(PREFIX + 'oai_dc_file_link');
-        var manifest = radioValue(PREFIX + 'oai_dc_iiif_manifest');
-        toggle(PREFIX + 'oai_dc_file_link', exposeMedia);
-        toggle(PREFIX + 'oai_dc_iiif_manifest', exposeMedia);
-        toggle(PREFIX + 'oai_dc_file_property', exposeMedia && fileLink !== null && fileLink !== 'none');
-        toggle(PREFIX + 'oai_dc_iiif_manifest_property', exposeMedia && manifest !== null && manifest !== 'none');
+        var fileLink = radioValue(PREFIX + 'file_link');
+        var manifest = radioValue(PREFIX + 'iiif_manifest');
+        toggle(PREFIX + 'file_link', exposeMedia);
+        toggle(PREFIX + 'iiif_manifest', exposeMedia);
+        toggle(PREFIX + 'file_property', exposeMedia && fileLink !== null && fileLink !== 'none');
+        toggle(PREFIX + 'iiif_manifest_property', exposeMedia && manifest !== null && manifest !== 'none');
     }
 
     document.addEventListener('DOMContentLoaded', function () {

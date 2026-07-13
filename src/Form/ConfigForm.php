@@ -358,7 +358,7 @@ class ConfigForm extends Form
             ])
 
             ->add([
-                'name' => 'oaipmhrepository_oai_dc_file_link',
+                'name' => 'oaipmhrepository_file_link',
                 'type' => Element\Radio::class,
                 'options' => [
                     'tab' => 'files',
@@ -374,12 +374,12 @@ class ConfigForm extends Form
                     ],
                 ],
                 'attributes' => [
-                    'id' => 'oaipmhrepository_oai_dc_file_link',
+                    'id' => 'oaipmhrepository_file_link',
                     'value' => 'none',
                 ],
             ])
             ->add([
-                'name' => 'oaipmhrepository_oai_dc_file_property',
+                'name' => 'oaipmhrepository_file_property',
                 'type' => OmekaElement\PropertySelect::class,
                 'options' => [
                     'tab' => 'files',
@@ -389,7 +389,7 @@ class ConfigForm extends Form
                     'term_as_value' => true,
                 ],
                 'attributes' => [
-                    'id' => 'oaipmhrepository_oai_dc_file_property',
+                    'id' => 'oaipmhrepository_file_property',
                     'multiple' => false,
                     'class' => 'chosen-select',
                     'data-placeholder' => 'Select property…', // @translate
@@ -397,7 +397,7 @@ class ConfigForm extends Form
                 ],
             ])
             ->add([
-                'name' => 'oaipmhrepository_oai_dc_iiif_manifest',
+                'name' => 'oaipmhrepository_iiif_manifest',
                 'type' => Element\Radio::class,
                 'options' => [
                     'tab' => 'files',
@@ -409,12 +409,12 @@ class ConfigForm extends Form
                     ],
                 ],
                 'attributes' => [
-                    'id' => 'oaipmhrepository_oai_dc_iiif_manifest',
+                    'id' => 'oaipmhrepository_iiif_manifest',
                     'value' => 'none',
                 ],
             ])
             ->add([
-                'name' => 'oaipmhrepository_oai_dc_iiif_manifest_property',
+                'name' => 'oaipmhrepository_iiif_manifest_property',
                 'type' => OmekaElement\PropertySelect::class,
                 'options' => [
                     'tab' => 'files',
@@ -424,7 +424,7 @@ class ConfigForm extends Form
                     'term_as_value' => true,
                 ],
                 'attributes' => [
-                    'id' => 'oaipmhrepository_oai_dc_iiif_manifest_property',
+                    'id' => 'oaipmhrepository_iiif_manifest_property',
                     'multiple' => false,
                     'class' => 'chosen-select',
                     'data-placeholder' => 'Select property…', // @translate
