@@ -13,7 +13,7 @@ class OaiSetManagerFactory implements FactoryInterface
      *
      * @return OaiSetManager
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $config = $container->get('Config');
         if (empty($config['oaipmhrepository']['oai_set_formats'])) {

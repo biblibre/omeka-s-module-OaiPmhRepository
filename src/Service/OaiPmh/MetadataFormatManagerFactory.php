@@ -13,7 +13,7 @@ class MetadataFormatManagerFactory implements FactoryInterface
      *
      * @return MetadataFormatManager
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $config = $container->get('Config');
         if (empty($config['oaipmhrepository']['metadata_formats'])) {

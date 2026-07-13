@@ -67,7 +67,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         $this->setSpecType = $setSpecType;
     }
 
-    public function setSite(SiteRepresentation $site = null): void
+    public function setSite(?SiteRepresentation $site = null): void
     {
         $this->site = $site;
     }

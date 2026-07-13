@@ -22,7 +22,7 @@ interface OaiSetInterface
      *
      * @param SiteRepresentation $site
      */
-    public function setSite(SiteRepresentation $site = null);
+    public function setSite(?SiteRepresentation $site = null);
 
     /**
      * Options for oai sets.

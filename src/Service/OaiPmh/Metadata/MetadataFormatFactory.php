@@ -11,7 +11,7 @@ class MetadataFormatFactory implements FactoryInterface
     /**
      * Prepare the metadata format.
      */
-    public function __invoke(ContainerInterface $services, $requestedName, array $options = null): AbstractMetadata
+    public function __invoke(ContainerInterface $services, $requestedName, ?array $options = null): AbstractMetadata
     {
         $plugins = $services->get('ControllerPluginManager');
         $settings = $services->get('Omeka\Settings');

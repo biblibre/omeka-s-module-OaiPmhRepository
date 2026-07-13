@@ -13,7 +13,7 @@ class BasicFactory implements FactoryInterface
      *
      * @return Basic
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $api = $container->get('Omeka\ApiManager');
         $settings = $container->get('Omeka\Settings');
