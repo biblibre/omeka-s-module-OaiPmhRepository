@@ -189,7 +189,7 @@ ALTER TABLE `oai_pmh_repository_token`
 SQL;
     try {
         $connection->executeStatement($sql);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         // Nothing.
     }
     $sql = <<<'SQL'
@@ -200,7 +200,7 @@ ALTER TABLE `oai_pmh_repository_token`
 SQL;
     try {
         $connection->executeStatement($sql);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         // Nothing.
     }
 
@@ -218,7 +218,7 @@ ALTER TABLE `oaipmhrepository_token`
 SQL;
     try {
         $connection->executeStatement($sql);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         // Nothing.
     }
     $sql = <<<'SQL'
@@ -228,7 +228,7 @@ ALTER TABLE `oaipmhrepository_token`
 SQL;
     try {
         $connection->executeStatement($sql);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         // Nothing.
     }
     $sql = <<<'SQL'
@@ -236,7 +236,7 @@ DROP TABLE `oai_pmh_repository_token`;
 SQL;
     try {
         $connection->executeStatement($sql);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         // Nothing.
     }
 }
