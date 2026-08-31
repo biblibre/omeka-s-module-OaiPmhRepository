@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+- Fix compatibility with Omeka S 4.2
+
 ## [3.4.9+biblibre.2] - 2025-02-14
 
 - Fix error when module is installed from console

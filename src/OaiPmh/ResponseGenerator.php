@@ -629,13 +629,19 @@ class ResponseGenerator extends AbstractXmlGenerator
     {
         /**
          * @var \Omeka\Api\Adapter\Manager $apiAdapterManager
+         * @var \Omeka\Api\Adapter\ItemAdapter $itemAdapter
          * @var \Doctrine\ORM\EntityManager $entityManager
          */
         $apiAdapterManager = $this->serviceLocator->get('Omeka\ApiAdapterManager');
+        $itemAdapter = $apiAdapterManager->get('items');
         $entityManager = $this->serviceLocator->get('Omeka\EntityManager');
 
-        $itemRepository = $entityManager->getRepository(\Omeka\Entity\Item::class);
-        $qb = $itemRepository->createQueryBuilder('omeka_root');
+        if (version_compare(\Omeka\Module::VERSION, '4.2.0') < 0) {
+            $qb = $entityManager->createQueryBuilder();
+        } else {
+            $qb = $itemAdapter->createQueryBuilder();
+        }
+        $qb->from('Omeka\Entity\Item', 'omeka_root');
         $qb->select('omeka_root');
 
         $query = new ArrayObject;
@@ -679,8 +685,6 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $metadataFormat->filterList($query);
 
-        /** @var \Omeka\Api\Adapter\ItemAdapter $itemAdapter */
-        $itemAdapter = $apiAdapterManager->get('items');
         $itemAdapter->buildQuery($qb, $query->getArrayCopy());
 
         if ($from) {
