@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [3.4.9-p1] - 2026-08-31
 
 - Fix compatibility with Omeka S 4.2
 
@@ -14,5 +14,6 @@ All notable changes to this project will be documented in this file.
 
 - Removed dependency on module Common
 
+[3.4.9-p1]: https://github.com/biblibre/omeka-s-module-OaiPmhRepository/releases/tag/v3.4.9-p1
 [3.4.9+biblibre.2]: https://github.com/biblibre/omeka-s-module-OaiPmhRepository/releases/tag/v3.4.9+biblibre.2
 [3.4.9+biblibre.1]: https://github.com/biblibre/omeka-s-module-OaiPmhRepository/releases/tag/v3.4.9+biblibre.1
