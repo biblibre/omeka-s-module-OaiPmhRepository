@@ -118,7 +118,9 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
         if (isset($query['expired']) && $query['expired']) {
             $qb->andWhere($expr->lte(
                 'omeka_root.expiration',
-                $this->createNamedParameter($qb, (new DateTime)->format(DateTime::ATOM))
+                // A string with a time zone offset is converted by MySQL 8 into
+                // the session time zone, so pass a date time, stored in utc.
+                $this->createNamedParameter($qb, new DateTime())
             ));
         }
     }
