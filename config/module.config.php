@@ -297,6 +297,7 @@ return [
             'oaipmhrepository_mets_data_item' => 'dcterms',
             'oaipmhrepository_mets_data_media' => 'dcterms',
             'oaipmhrepository_human_interface' => true,
+            'oaipmhrepository_human_interface_assets' => 'local',
             'oaipmhrepository_redirect_route' => '',
             'oaipmhrepository_list_limit' => 50,
             'oaipmhrepository_token_expiration_time' => 10,

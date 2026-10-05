@@ -9,7 +9,8 @@ https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository)
 and OAI-PMH Gateway (https://gitlab.com/Daniel-KM/Omeka-plugin-OaiPmhGateway), but can be used by
 any OAI-PMH Data Provider (https://www.openarchives.org/pmh/register_data_provider).
 To customize it, you may need to adapt the paths to the css and js for your application.
-CDN are used by default.
+The local files set by the processing instruction "oai-pmh-repository-assets" are
+used by default, else the CDN.
 
 Includes
 - Bootstrap, published under the MIT licence (see https://getbootstrap.com).
@@ -72,20 +73,14 @@ No support (may depend on server):
     <!-- Let empty if this a normal repository. -->
     <xsl:param name="gateway-url" select="''" />
 
-    <!-- Url to css and javascripts. Let empty to use the cdn. -->
-    <!-- Note: the external css/js libraries are not installed by default. -->
+    <!-- Url to css and javascripts. Let empty to use the local files set by the server, else the cdn. -->
     <!-- Omeka -->
     <!--
     <xsl:param name="css-oai-pmh-repository" select="'../plugins/OaiPmhRepository/views/public/css/oai-pmh-repository.css'" />
     <xsl:param name="css-bootstrap" select="'../plugins/OaiPmhRepository/views/public/css/bootstrap.min.css'" />
     <xsl:param name="javascript-bootstrap" select="'../plugins/OaiPmhRepository/views/public/javascripts/bootstrap.bundle.min.js'" />
     -->
-    <!-- Omeka S -->
-    <!--
-    <xsl:param name="css-oai-pmh-repository" select="'modules/OaiPmhRepository/asset/css/oai-pmh-repository.css'" />
-    <xsl:param name="css-bootstrap" select="'modules/OaiPmhRepository/asset/vendor/bootstrap/css/bootstrap.min.css'" />
-    <xsl:param name="javascript-bootstrap" select="'modules/OaiPmhRepository/asset/vendor/bootstrap/js/bootstrap.bundle.min.js'" />
-    -->
+    <!-- Omeka S: the local files are set by the server. -->
     <xsl:param name="css-oai-pmh-repository" select="''" />
     <xsl:param name="css-bootstrap" select="''" />
     <xsl:param name="javascript-bootstrap" select="''" />
@@ -114,6 +109,29 @@ No support (may depend on server):
 
     <xsl:variable name="forbidden-characters" select="':/.()#? '" />
 
+    <!-- Urls of local css and js set by the server, if any. -->
+    <xsl:variable name="assets" select="/processing-instruction('oai-pmh-repository-assets')" />
+    <xsl:variable name="url-css-bootstrap">
+        <xsl:choose>
+            <xsl:when test="$css-bootstrap != ''">
+                <xsl:value-of select="$css-bootstrap" />
+            </xsl:when>
+            <xsl:when test="contains($assets, 'css=&quot;')">
+                <xsl:value-of select="substring-before(substring-after($assets, 'css=&quot;'), '&quot;')" />
+            </xsl:when>
+        </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="url-javascript-bootstrap">
+        <xsl:choose>
+            <xsl:when test="$javascript-bootstrap != ''">
+                <xsl:value-of select="$javascript-bootstrap" />
+            </xsl:when>
+            <xsl:when test="contains($assets, 'js=&quot;')">
+                <xsl:value-of select="substring-before(substring-after($assets, 'js=&quot;'), '&quot;')" />
+            </xsl:when>
+        </xsl:choose>
+    </xsl:variable>
+
     <xsl:template match="/">
         <html lang="en">
             <head>
@@ -131,8 +149,8 @@ No support (may depend on server):
                 <link rel="icon" href="/favicon.ico" />
                 <title><xsl:value-of select="$homepage-text" /></title>
                 <xsl:choose>
-                    <xsl:when test="$css-bootstrap != ''">
-                        <link rel="stylesheet" href="{$css-bootstrap}" type="text/css" />
+                    <xsl:when test="$url-css-bootstrap != ''">
+                        <link rel="stylesheet" href="{$url-css-bootstrap}" type="text/css" />
                     </xsl:when>
                     <xsl:otherwise>
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
@@ -374,8 +392,8 @@ No support (may depend on server):
                     </div>
                 </footer>
                 <xsl:choose>
-                    <xsl:when test="$javascript-bootstrap != ''">
-                        <script type="text/javascript" src="{$javascript-bootstrap}" />
+                    <xsl:when test="$url-javascript-bootstrap != ''">
+                        <script type="text/javascript" src="{$url-javascript-bootstrap}" />
                     </xsl:when>
                     <xsl:otherwise>
                         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

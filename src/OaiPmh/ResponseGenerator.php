@@ -236,6 +236,7 @@ class ResponseGenerator extends AbstractXmlGenerator
             $stylesheet = $assetUrl('xsl/oai-pmh-repository.xsl', 'OaiPmhRepository', true);
             $xslt = $this->document->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $stylesheet . '"');
             $this->document->appendChild($xslt);
+            $this->appendAssetsInstruction($assetUrl, $settings->get('oaipmhrepository_human_interface_assets', 'local'));
         }
 
         $root = $this->document->createElementNS(self::OAI_PMH_NAMESPACE_URI,
@@ -401,6 +402,32 @@ class ResponseGenerator extends AbstractXmlGenerator
         ) {
             $this->throwError(self::OAI_ERR_CANNOT_DISSEMINATE_FORMAT);
         }
+    }
+
+    /**
+     * Append the urls of the local css and js for the human interface.
+     *
+     * The xsl is processed by the browser, so it cannot know the base path of
+     * the module: the urls are passed through a processing instruction, ignored
+     * by the harvesters. Without it, the xsl uses the cdn.
+     */
+    private function appendAssetsInstruction($assetUrl, string $mode): void
+    {
+        $files = [
+            'css' => 'vendor/bootstrap/css/bootstrap.min.css',
+            'js' => 'vendor/bootstrap/js/bootstrap.bundle.min.js',
+        ];
+        $basePath = dirname(__DIR__, 2) . '/asset/';
+        if ($mode !== 'local'
+            || !file_exists($basePath . $files['css'])
+            || !file_exists($basePath . $files['js'])
+        ) {
+            return;
+        }
+        $this->document->appendChild($this->document->createProcessingInstruction(
+            'oai-pmh-repository-assets',
+            sprintf('css="%1$s" js="%2$s"', $assetUrl($files['css'], 'OaiPmhRepository'), $assetUrl($files['js'], 'OaiPmhRepository'))
+        ));
     }
 
     /**

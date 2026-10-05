@@ -629,6 +629,22 @@ class ConfigForm extends Form
                 ],
             ])
             ->add([
+                'name' => 'oaipmhrepository_human_interface_assets',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'tab' => 'advanced',
+                    'label' => 'Human interface: css and javascript', // @translate
+                    'info' => 'The local files are installed with the module. A cdn may be blocked by browser extensions, intranets or security policies.', // @translate
+                    'value_options' => [
+                        'local' => 'Local files', // @translate
+                        'cdn' => 'Cdn', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_human_interface_assets',
+                ],
+            ])
+            ->add([
                 'name' => 'oaipmhrepository_redirect_route',
                 'type' => Element\Text::class,
                 'options' => [
