@@ -506,6 +506,35 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         ];
     }
 
+    /**
+     * Get the label of a value with a uri, that may be stored as json data.
+     *
+     * Some data types, like "place" (module Data Type Place), store structured
+     * data in the value instead of a simple label, because Omeka has no column
+     * for extra data. So extract the label from the common keys, else return an
+     * empty string: the raw json is never a label.
+     */
+    protected function formatValueUriLabel(ValueRepresentation $value): string
+    {
+        $label = trim((string) $value->value());
+        if (!strlen($label) || $label[0] !== '{') {
+            return $label;
+        }
+
+        $data = json_decode($label, true);
+        if (!is_array($data)) {
+            return $label;
+        }
+
+        foreach (['o:label', 'toponym', 'label', 'title', 'name'] as $key) {
+            if (!empty($data[$key]) && is_scalar($data[$key])) {
+                return trim((string) $data[$key]);
+            }
+        }
+
+        return '';
+    }
+
     protected function formatValueUri(ValueRepresentation $value): array
     {
         $attributes = [];
@@ -521,13 +550,13 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                 $v = $value->asHtml();
                 break;
             case 'uri_label':
-                $v = trim($value->uri() . ' ' . $value->value());
+                $v = trim($value->uri() . ' ' . $this->formatValueUriLabel($value));
                 break;
             case 'label_only':
-                $v = trim((string) $value->value());
+                $v = $this->formatValueUriLabel($value);
                 break;
             case 'label_else_uri':
-                $v = trim((string) $value->value());
+                $v = $this->formatValueUriLabel($value);
                 if (!strlen($v)) {
                     $v = (string) $value->uri();
                 }
@@ -537,7 +566,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                 // attributes, the uri is kept when no label.
                 //check if uri is valid link, if not, use label as prefix
                 $vUri = (string) $value->uri();
-                $v = (string) $value->value();
+                $v = $this->formatValueUriLabel($value);
                 if (filter_var($vUri, FILTER_VALIDATE_URL)) {
                     $v = strlen($v) ? $v : $vUri;
                     $attributes['href'] = $vUri;
@@ -553,7 +582,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
             default:
                 $v = (string) $value->uri();
                 $attributes['xsi:type'] = 'dcterms:URI';
-                $w = (string) $value->value();
+                $w = $this->formatValueUriLabel($value);
                 if (strlen($w)) {
                     $attributes[$this->params['attribute_title'] ?? 'title'] = $w;
                 }
