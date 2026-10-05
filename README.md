@@ -149,6 +149,41 @@ maps Bibliographic Ontology (bibo) and Friend of a Friend (foaf) into Dublin Cor
 Of course is not perfect, but you can adapt it to your real data. See the default
 For foaf, a [spreadsheet] can help to improve the mapping.
 
+### Mapper mappings
+
+When the module [Mapper] is enabled, a format can be built with a mapping of
+this module instead of the internal process. Set one line by format, with the
+metadata prefix and a mapping reference: `mapping:{id or label}` for a mapping
+saved in the database, `user:{file}` for a file in `files/mapping/`, or `module:{file}`
+for a file of the module Mapper, for example:
+
+```
+oai_dc = module:dublin-core/omeka_to_oai_dc.xml
+```
+
+### Mappings by site
+
+The repository of each site can have its own mappings, so different harvesters
+can get the same resources with different metadata, for example a subject
+converted to a specific vocabulary for one of them only. Each site harvested
+this way uses its own endpoint (`/s/{site-slug}/oai`), and the resources can be
+shared between sites.
+
+The options "Map properties by site" and "Mapper mappings by site" use one group
+by site, starting with `#` and the site slug. The property mapping of a site
+replaces the main one, and the Mapper mapping of a format replaces the main one
+for this format (`none` to use the internal process):
+
+```
+# my-site
+dcterms:alternative = dcterms:subject
+```
+
+```
+# my-site
+oai_dc = mapping:My oai_dc mapping
+```
+
 ### Files (tab "Files")
 
 These options append links to the files of each item (standard media and digital
@@ -277,8 +312,8 @@ through the standard api of Omeka S as json.
 
 This output format uses an Omeka-specific XML output that includes all metadata
 elements without requiring crosswalking or subsetting, but is not well-supported
-by harvesters or other tools and because the RRCHNM itself removed the [schema]
-from the last site.
+by harvesters or other tools and because Digital Scholar itself removed the
+[schema] from the last site.
 
 **NOTE**: Because of its limited support by harvesters, the format is not
 implemented in Omeka S. Nevertheless, you can use the format "simple xml" that
@@ -318,6 +353,7 @@ TODO
 - [ ] Include namespace and metadata of modules when needed for simple_xml (module Mapping, etc.)
 - [ ] Native rdf output (from json serialization? From easyrdf?).
 - [ ] Improve performance for big bases and items with many medias. With a cache? In a table? As a xml file?
+- [ ] Support OAI-PMH deletion.
 
 
 Warning
@@ -361,6 +397,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 The human interface is published under the [CeCILL-B] BSD-like licence. See its
 header for other licenses notes. It is based on [Bootstrap].
 
+### Schemas used by the tests
+
+The schemas in `tests/OaiPmhRepositoryTest/fixtures/xsd/` are copies of the
+official schemas, with the imports updated to the local copies:
+
+- `OAI-PMH.xsd` and `oai_dc.xsd`: [OAI-PMH] by the Open Archives Initiative,
+  under the [CC BY-SA 3.0] licence.
+- `simpledc20021212.xsd`: [Dublin Core] by the Dublin Core Metadata Initiative,
+  under the [CC BY 4.0] licence.
+- `xml.xsd`: W3C, under the [W3C Software and Document License].
+
 
 Copyright
 ---------
@@ -371,6 +418,9 @@ See commits for full list of contributors.
 * Copyright John Flatness, 2009-2016
 * Copyright Julian Maurice for BibLibre, 2016-2017
 * Copyright Daniel Berthereau, 2014-2023 (see [Daniel-KM])
+* Copyright Open Archives Initiative, 2002-2004 (schemas OAI-PMH and oai_dc used by tests)
+* Copyright Dublin Core Metadata Initiative, 2002 (schema simple Dublin Core used by tests)
+* Copyright W3C, 2001 (schema xml used by tests)
 
 This [Omeka S] module is based on the rewrite of the [OAI-PMH Repository plugin]
 for [Omeka] by [BibLibre] and provide the same features as the original plugin,
@@ -389,9 +439,13 @@ written by John Flatness, and many more.
 [Global repository redirect route]: #global-repository-redirect-route
 [Bootstrap]: https://getbootstrap.com
 [default mapping]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130
+[Mapper]: https://gitlab.com/Daniel-KM/Omeka-S-module-Mapper
 [spreadsheet]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/foaf_to_dcterms.ods
 [`oai-pmh-repository.xsl`]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/blob/master/asset/xsl/oai-pmh-repository.xsl
 [Dublin Core]: http://dublincore.org
+[CC BY-SA 3.0]: https://creativecommons.org/licenses/by-sa/3.0/
+[CC BY 4.0]: https://creativecommons.org/licenses/by/4.0/
+[W3C Software and Document License]: https://www.w3.org/copyright/software-license-2023/
 [Dublin Core Terms]: http://www.dublincore.org/documents/dcmi-terms/
 [CDWA Lite]: https://www.getty.edu/research/publications/electronic_publications/cdwa/cdwalite.html
 [MODS]: http://www.loc.gov/standards/mods/
