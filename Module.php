@@ -35,7 +35,6 @@ use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
 use Laminas\Mvc\Controller\AbstractController;
 use Laminas\Mvc\MvcEvent;
-use Omeka\Api\Representation\PropertyRepresentation;
 use Omeka\Module\AbstractModule;
 use Laminas\View\Renderer\PhpRenderer;
 
