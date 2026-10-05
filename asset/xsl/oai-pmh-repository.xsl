@@ -741,6 +741,11 @@ No support (may depend on server):
                                     <div class="collapse" id="{concat('set-', translate(oai:setSpec/text(), $forbidden-characters, ''))}">
                                         <hr />
                                         <xsl:choose>
+                                            <xsl:when test="oai:setDescription/*[local-name() = 'dc']/*[local-name() = 'description']">
+                                                <xsl:for-each select="oai:setDescription/*[local-name() = 'dc']/*[local-name() = 'description']">
+                                                    <p class="mb-0" style="white-space: pre-line;"><xsl:value-of select="." /></p>
+                                                </xsl:for-each>
+                                            </xsl:when>
                                             <xsl:when test="oai:setDescription/*">
                                                 <xsl:apply-templates select="oai:setDescription/*" mode='xmlverb' />
                                             </xsl:when>

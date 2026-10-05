@@ -12,9 +12,11 @@ use ArrayObject;
 use DateTime;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use DomDocument;
+use DOMElement;
 use Laminas\Http\Request;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use OaiPmhRepository\Api\Representation\OaiPmhRepositoryTokenRepresentation;
+use OaiPmhRepository\OaiPmh\Metadata\OaiDc;
 use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Api\Representation\SiteRepresentation;
@@ -576,8 +578,32 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $this->document->documentElement->appendChild($listSets);
         foreach ($oaiSets as $oaiSet) {
-            $this->createElementWithChildren($listSets, 'set', $oaiSet);
+            $description = $oaiSet['setDescription'] ?? null;
+            unset($oaiSet['setDescription']);
+            $set = $this->createElementWithChildren($listSets, 'set', $oaiSet);
+            if ($description !== null && $description !== '') {
+                $this->appendSetDescription($set, $description);
+            }
         }
+    }
+
+    /**
+     * Append a set description as an oai_dc container.
+     *
+     * The protocol requires an xml container, not a text, so the description
+     * is wrapped like in the example of the specification.
+     *
+     * @link https://www.openarchives.org/OAI/openarchivesprotocol.html#ListSets
+     */
+    private function appendSetDescription(DOMElement $set, string $description): void
+    {
+        // Attach each node before filling it to avoid duplicate namespaces.
+        $setDescription = $set->appendChild($this->document->createElement('setDescription'));
+        $dc = $setDescription->appendChild($this->document->createElementNS(OaiDc::METADATA_NAMESPACE, 'oai_dc:dc'));
+        $dc->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:dc', OaiDc::DC_NAMESPACE_URI);
+        $dc->setAttributeNS(self::XML_SCHEMA_NAMESPACE_URI, 'xsi:schemaLocation', OaiDc::METADATA_NAMESPACE . ' ' . OaiDc::METADATA_SCHEMA);
+        $dc->appendChild($this->document->createElementNS(OaiDc::DC_NAMESPACE_URI, 'dc:description'))
+            ->appendChild($this->document->createTextNode($description));
     }
 
     /**
