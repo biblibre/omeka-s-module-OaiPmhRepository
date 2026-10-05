@@ -74,6 +74,7 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
 
     public function tearDown(): void
     {
+        $this->settings()->set('oaipmhrepository_oai_identifier_property', '');
         try {
             $this->api()->delete('sites', $this->site->id());
         } catch (\Exception $e) {
@@ -254,6 +255,41 @@ class RequestControllerTest extends AbstractHttpControllerTestCase
         $title = (string) $dc->children('dc', true)->title;
         $expectedTitle = (string) $this->item->value('dcterms:title');
         $this->assertEquals($expectedTitle, $title);
+    }
+
+    /**
+     * The identifiers built from a property can be used to get the record.
+     */
+    public function testGetRecordWithIdentifierProperty(): void
+    {
+        $this->settings()->set('oaipmhrepository_oai_identifier_property', 'dcterms:identifier');
+        $this->loginAdmin();
+        $item = $this->api()->create('items', [
+            'o:is_public' => true,
+            'o:site' => [['o:id' => $this->site->id()]],
+            'o:item_set' => [['o:id' => $this->itemSet->id()]],
+            'dcterms:title' => [['type' => 'literal', 'property_id' => $this->getPropertyId('dcterms:title'), '@value' => 'Brave New World']],
+            'dcterms:identifier' => [['type' => 'literal', 'property_id' => $this->getPropertyId('dcterms:identifier'), '@value' => 'bnw-1932']],
+        ])->getContent();
+
+        try {
+            $this->dispatch('/s/test/oai?verb=GetRecord&metadataPrefix=oai_dc&identifier=oai:test:bnw-1932');
+            $xml = simplexml_load_string($this->getResponse()->getContent());
+            $this->assertObjectHasProperty('GetRecord', $xml);
+            $this->assertSame('oai:test:bnw-1932', (string) $xml->GetRecord->record->header->identifier);
+            $dc = $xml->GetRecord->record->metadata->children('oai_dc', true)->dc;
+            $this->assertSame('Brave New World', (string) $dc->children('dc', true)->title);
+
+            // Without the property, the internal id is used.
+            $this->reset();
+            $identifier = 'oai:test:' . $this->item->id();
+            $this->dispatch("/s/test/oai?verb=GetRecord&metadataPrefix=oai_dc&identifier=$identifier");
+            $xml = simplexml_load_string($this->getResponse()->getContent());
+            $this->assertSame($identifier, (string) $xml->GetRecord->record->header->identifier);
+        } finally {
+            $this->loginAdmin();
+            $this->api()->delete('items', $item->id());
+        }
     }
 
     public function testListRecordsVerbOaiDc(): void

@@ -32,9 +32,10 @@ trait OaiPmhRepositoryTestTrait
     /**
      * Get the service locator.
      *
-     * Use the application provided by the base test case (cached, with the
-     * proper Omeka type), not Bootstrap::getApplication() which builds a fresh
-     * instance on each call.
+     * Use the application provided by the base test case, that is cached, and
+     * not Bootstrap::getApplication(), that builds a fresh instance on each
+     * call. Both return a Laminas application: Omeka\Mvc\Application is only a
+     * factory and is never an application type.
      */
     protected function getServiceLocator(): ServiceLocatorInterface
     {
