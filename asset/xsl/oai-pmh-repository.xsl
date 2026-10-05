@@ -718,7 +718,7 @@ No support (may depend on server):
                                     <xsl:choose>
                                         <xsl:when test="oai:setDescription != ''">
                                             <a class="btn btn-outline-secondary dropdown-toggle collapse-data-btn" data-bs-toggle="collapse" role="button"
-                                                    href="{concat('#', translate(oai:setSpec/text(), $forbidden-characters, ''))}">
+                                                    href="{concat('#set-', translate(oai:setSpec/text(), $forbidden-characters, ''))}">
                                                 <xsl:text>Description</xsl:text>
                                             </a>
                                         </xsl:when>
@@ -738,9 +738,16 @@ No support (may depend on server):
                                     </a>
                                 </div>
                                 <xsl:if test="oai:setDescription != ''">
-                                    <div class="collapse" id="{translate(oai:setSpec/text(), $forbidden-characters, '')}">
+                                    <div class="collapse" id="{concat('set-', translate(oai:setSpec/text(), $forbidden-characters, ''))}">
                                         <hr />
-                                        <xsl:apply-templates select="oai:setDescription/*" mode='xmlverb' />
+                                        <xsl:choose>
+                                            <xsl:when test="oai:setDescription/*">
+                                                <xsl:apply-templates select="oai:setDescription/*" mode='xmlverb' />
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <p class="mb-0" style="white-space: pre-line;"><xsl:value-of select="oai:setDescription" /></p>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </div>
                                 </xsl:if>
                             </td>
@@ -871,7 +878,7 @@ No support (may depend on server):
                                         </xsl:when>
                                         <xsl:otherwise>
                                             <a class="btn btn-outline-secondary collapse-data-btn" data-bs-toggle="collapse" role="button"
-                                                    href="{concat('#', translate(oai:header/oai:identifier/text(), $forbidden-characters, ''))}">
+                                                    href="{concat('#record-', translate(oai:header/oai:identifier/text(), $forbidden-characters, ''))}">
                                                 <xsl:text>View Metadata</xsl:text>
                                             </a>
                                         </xsl:otherwise>
@@ -888,7 +895,7 @@ No support (may depend on server):
                                 </tr>
                             </xsl:when>
                             <xsl:otherwise>
-                                <tr class="collapse" id="{translate(oai:header/oai:identifier/text(), $forbidden-characters, '')}">
+                                <tr class="collapse" id="{concat('record-', translate(oai:header/oai:identifier/text(), $forbidden-characters, ''))}">
                                     <td colspan="3">
                                         <table>
                                             <tbody>
