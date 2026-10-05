@@ -12,8 +12,7 @@ To customize it, you may need to adapt the paths to the css and js for your appl
 CDN are used by default.
 
 Includes
-- Bootstrap, published under the MIT licence (see http://getbootstrap.com).
-- JQuery, published under the MIT licence (see https://jquery.com).
+- Bootstrap, published under the MIT licence (see https://getbootstrap.com).
 - XML Verbatim, published under Apache License, Version 2  or LGPL (see below
 and see http://www2.informatik.hu-berlin.de/~obecker/XSLT/#xmlverbatim),
 Initialy adapted from the stylesheet built by Lyncode for DSpace (http://www.lyncode.com/dspace/addons/xoai/),
@@ -79,22 +78,16 @@ No support (may depend on server):
     <!--
     <xsl:param name="css-oai-pmh-repository" select="'../plugins/OaiPmhRepository/views/public/css/oai-pmh-repository.css'" />
     <xsl:param name="css-bootstrap" select="'../plugins/OaiPmhRepository/views/public/css/bootstrap.min.css'" />
-    <xsl:param name="css-bootstrap-theme" select="'../plugins/OaiPmhRepository/views/public/css/bootstrap-theme.min.css'" />
-    <xsl:param name="javascript-jquery" select="'../application/views/scripts/javascripts/vendor/jquery.js'" />
-    <xsl:param name="javascript-bootstrap" select="'../plugins/OaiPmhRepository/views/public/javascripts/bootstrap.min.js'" />
+    <xsl:param name="javascript-bootstrap" select="'../plugins/OaiPmhRepository/views/public/javascripts/bootstrap.bundle.min.js'" />
     -->
     <!-- Omeka S -->
     <!--
     <xsl:param name="css-oai-pmh-repository" select="'modules/OaiPmhRepository/asset/css/oai-pmh-repository.css'" />
     <xsl:param name="css-bootstrap" select="'modules/OaiPmhRepository/asset/vendor/bootstrap/css/bootstrap.min.css'" />
-    <xsl:param name="css-bootstrap-theme" select="'modules/OaiPmhRepository/asset/vendor/bootstrap/css/bootstrap-theme.min.css'" />
-    <xsl:param name="javascript-jquery" select="'modules/OaiPmhRepository/asset/vendor/jquery/jquery.min.js'" />
-    <xsl:param name="javascript-bootstrap" select="'modules/OaiPmhRepository/asset/vendor/bootstrap/js/bootstrap.min.js'" />
+    <xsl:param name="javascript-bootstrap" select="'modules/OaiPmhRepository/asset/vendor/bootstrap/js/bootstrap.bundle.min.js'" />
     -->
     <xsl:param name="css-oai-pmh-repository" select="''" />
     <xsl:param name="css-bootstrap" select="''" />
-    <xsl:param name="css-bootstrap-theme" select="''" />
-    <xsl:param name="javascript-jquery" select="''" />
     <xsl:param name="javascript-bootstrap" select="''" />
 
     <!-- This option is used by XML Verbatim. -->
@@ -128,10 +121,6 @@ No support (may depend on server):
                     <xsl:attribute name="charset">utf-8</xsl:attribute>
                 </xsl:element>
                 <xsl:element name="meta">
-                    <xsl:attribute name="http-equiv">X-UA-Compatible</xsl:attribute>
-                    <xsl:attribute name="content">IE=edge</xsl:attribute>
-                </xsl:element>
-                <xsl:element name="meta">
                     <xsl:attribute name="name">viewport</xsl:attribute>
                     <xsl:attribute name="content">width=device-width, initial-scale=1</xsl:attribute>
                 </xsl:element>
@@ -146,15 +135,7 @@ No support (may depend on server):
                         <link rel="stylesheet" href="{$css-bootstrap}" type="text/css" />
                     </xsl:when>
                     <xsl:otherwise>
-                        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
-                    </xsl:otherwise>
-                </xsl:choose>
-                <xsl:choose>
-                    <xsl:when test="$css-bootstrap != ''">
-                        <link rel="stylesheet" href="{$css-bootstrap-theme}" type="text/css" />
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
                     </xsl:otherwise>
                 </xsl:choose>
                 <xsl:choose>
@@ -197,7 +178,7 @@ No support (may depend on server):
                             font-style: italic;
                             margin-left: 10px;
                         }
-                        .oaipmh-response .panel-heading a {
+                        .oaipmh-response .card-header a {
                             color: #3c763d;
                         }
                         .oaipmh-description {
@@ -223,13 +204,10 @@ No support (may depend on server):
                         .oaipmh-records table table {
                             table-layout:fixed;
                         }
-                        .oaipmh-records table tr.collapse.in {
-                            display: table-row;
-                        }
                         .oaipmh-records table tr.collapse td {
                             word-wrap: break-word;
                         }
-                        .oaipmh-record .panel-body {
+                        .oaipmh-record .card-body {
                             word-wrap: break-word;
                         }
                         .oaipmh-toolkit-icon {
@@ -281,31 +259,21 @@ No support (may depend on server):
                         </style>
                     </xsl:otherwise>
                 </xsl:choose>
-                <xsl:comment>HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries</xsl:comment>
-                <xsl:comment><![CDATA[[if lt IE 9]>
-                <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-                <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-                <![endif]]]></xsl:comment>
             </head>
             <body>
-                <nav class="navbar navbar-inverse navbar-fixed-top">
+                <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
                     <div class="container-fluid">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand" id="logo">
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="$url-homepage" />
-                                </xsl:attribute>
-                                <xsl:value-of select="$homepage-text" />
-                            </a>
-                        </div>
-                        <div id="navbar" class="navbar-collapse collapse">
-                            <ul class="nav navbar-nav navbar-right">
+                        <a class="navbar-brand" id="logo">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="$url-homepage" />
+                            </xsl:attribute>
+                            <xsl:value-of select="$homepage-text" />
+                        </a>
+                        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div id="navbar" class="collapse navbar-collapse">
+                            <ul class="navbar-nav ms-auto">
                                 <xsl:call-template name="nav-link">
                                     <xsl:with-param name="text" select="'Identify'" />
                                     <xsl:with-param name="title" select="'Institutional information'" />
@@ -342,7 +310,7 @@ No support (may depend on server):
                                 -->
                             </ul>
                             <!--
-                            <form class="navbar-form navbar-right">
+                            <form class="d-flex">
                                 <input type="text" class="form-control" placeholder="Search..." />
                             </form>
                             -->
@@ -351,9 +319,9 @@ No support (may depend on server):
                 </nav>
                 <div class="container">
                     <div class="row">
-                        <div class="panel panel-default panel-success oaipmh-response">
+                        <div class="card border-success mb-3 oaipmh-response">
                             <xsl:if test="$url-gateway != ''">
-                                <div class="panel-heading">
+                                <div class="card-header">
                                     <xsl:text>The access to this repository is provided through the gateway </xsl:text>
                                     <em><a href="{$url-gateway}">
                                         <xsl:value-of select="$url-gateway" />
@@ -361,8 +329,8 @@ No support (may depend on server):
                                     <xsl:text>.</xsl:text>
                                 </div>
                             </xsl:if>
-                            <div class="panel-body">
-                                <div class="pull-right">
+                            <div class="card-body">
+                                <div class="float-end">
                                     <xsl:text>Response Date: </xsl:text>
                                     <xsl:value-of select="substring(oai:OAI-PMH/oai:responseDate/text(), 1, 10)" />
                                     <xsl:text> </xsl:text>
@@ -383,7 +351,7 @@ No support (may depend on server):
                 </div>
                 <footer class="footer">
                     <div class="container">
-                        <div class="row text-right">
+                        <div class="row text-end">
                             <div class="vertical-space"></div>
                                 <xsl:if test="$powered-by-url != '' and $powered-by-text != ''">
                                     <p><small><a href="{$powered-by-url}">
@@ -393,7 +361,7 @@ No support (may depend on server):
                                 <a href="{$powered-by-url}" id="logo-powered-by" />
                             <div class="vertical-space"></div>
                         </div>
-                        <div class="row text-right">
+                        <div class="row text-end">
                             <div class="vertical-space"></div>
                                 <xsl:if test="$stylesheet-url != '' and $stylesheet-text != ''">
                                     <p><small><a href="{$stylesheet-url}">
@@ -406,19 +374,11 @@ No support (may depend on server):
                     </div>
                 </footer>
                 <xsl:choose>
-                    <xsl:when test="$javascript-jquery != ''">
-                        <script type="text/javascript" src="{$javascript-jquery}" />
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-                    </xsl:otherwise>
-                </xsl:choose>
-                <xsl:choose>
                     <xsl:when test="$javascript-bootstrap != ''">
                         <script type="text/javascript" src="{$javascript-bootstrap}" />
                     </xsl:when>
                     <xsl:otherwise>
-                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
                     </xsl:otherwise>
                 </xsl:choose>
             </body>
@@ -429,7 +389,7 @@ No support (may depend on server):
         <div class="oaipmh oaipmh-error">
             <h2>Error in request!</h2>
             <div class="alert alert-danger" role="alert">
-                <span class="label label-danger">
+                <span class="badge text-bg-danger">
                     <xsl:text>[</xsl:text>
                     <xsl:value-of select="@code" />
                     <xsl:text>]</xsl:text>
@@ -674,9 +634,9 @@ No support (may depend on server):
     <xsl:template match="oai:OAI-PMH/oai:ListMetadataFormats">
         <div class="oaipmh oaipmh-formats">
             <h2>List of Metadata Formats</h2>
-            <div class="well well-sm">
+            <div class="bg-body-tertiary border rounded p-2 mb-3">
                 <xsl:text>Results fetched </xsl:text>
-                 <span class="badge"><xsl:value-of select="count(oai:metadataFormat)" /></span>
+                 <span class="badge rounded-pill text-bg-secondary"><xsl:value-of select="count(oai:metadataFormat)" /></span>
             </div>
 
             <table class="table table-bordered table-striped">
@@ -687,20 +647,20 @@ No support (may depend on server):
                                 <h4><xsl:value-of select="oai:metadataPrefix/text()" /></h4>
                             </td>
                             <td>
-                                <dl class="dl-horizontal">
-                                    <dt>Namespace</dt>
-                                    <dd><a href="{oai:metadataNamespace/text()}"><xsl:value-of select="oai:metadataNamespace/text()" /></a></dd>
-                                    <dt>Schema</dt>
-                                    <dd><a href="{oai:schema/text()}"><xsl:value-of select="oai:schema/text()" /></a></dd>
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-3">Namespace</dt>
+                                    <dd class="col-sm-9"><a href="{oai:metadataNamespace/text()}"><xsl:value-of select="oai:metadataNamespace/text()" /></a></dd>
+                                    <dt class="col-sm-3">Schema</dt>
+                                    <dd class="col-sm-9"><a href="{oai:schema/text()}"><xsl:value-of select="oai:schema/text()" /></a></dd>
                                 </dl>
                             </td>
                             <td>
-                                <div class="btn-group-vertical pull-right" aria-label="List identifiers and records" role="group">
-                                    <a class="btn btn-default"
+                                <div class="btn-group-vertical float-end text-nowrap" aria-label="List identifiers and records" role="group">
+                                    <a class="btn btn-outline-secondary"
                                             href="{concat(/oai:OAI-PMH/oai:request/text(), '?verb=ListIdentifiers&amp;metadataPrefix=', oai:metadataPrefix/text())}">
                                         <xsl:text>List Identifiers</xsl:text>
                                     </a>
-                                    <a class="btn btn-default"
+                                    <a class="btn btn-outline-secondary"
                                             href="{concat(/oai:OAI-PMH/oai:request/text(), '?verb=ListRecords&amp;metadataPrefix=', oai:metadataPrefix/text())}">
                                         <xsl:text>List Records</xsl:text>
                                     </a>
@@ -721,9 +681,9 @@ No support (may depend on server):
         </xsl:variable>
         <div class="oaipmh oaipmh-sets">
             <h2>List of Sets</h2>
-            <div class="well well-sm">
+            <div class="bg-body-tertiary border rounded p-2 mb-3">
                 <xsl:text>Results fetched </xsl:text>
-                <span class="badge">
+                <span class="badge rounded-pill text-bg-secondary">
                     <xsl:call-template name="result-count">
                         <xsl:with-param name="path" select="oai:set" />
                     </xsl:call-template>
@@ -734,7 +694,7 @@ No support (may depend on server):
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">
-                            <span class="label label-default">
+                            <span class="badge text-bg-secondary">
                                 <xsl:text>Set Spec</xsl:text>
                             </span>
                             <xsl:text> </xsl:text>
@@ -749,31 +709,30 @@ No support (may depend on server):
                                 <xsl:value-of select="position() + $first-result" />
                             </th>
                             <td>
-                                <span class="label label-default">
+                                <span class="badge text-bg-secondary">
                                     <xsl:value-of select="oai:setSpec/text()" />
                                 </span>
                                 <xsl:text> </xsl:text>
                                 <xsl:value-of select="oai:setName/text()" />
-                                <div class="btn-group pull-right" aria-label="List of identifiers and records" role="group">
+                                <div class="btn-group float-end" aria-label="List of identifiers and records" role="group">
                                     <xsl:choose>
                                         <xsl:when test="oai:setDescription != ''">
-                                            <a class="btn btn-default collapse-data-btn" data-toggle="collapse"
+                                            <a class="btn btn-outline-secondary dropdown-toggle collapse-data-btn" data-bs-toggle="collapse" role="button"
                                                     href="{concat('#', translate(oai:setSpec/text(), $forbidden-characters, ''))}">
-                                                <xsl:text>Description </xsl:text>
-                                                <span class="caret"></span>
+                                                <xsl:text>Description</xsl:text>
                                             </a>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <a class="btn btn-default disabled" href="#">
+                                            <a class="btn btn-outline-secondary disabled" aria-disabled="true">
                                                 <xsl:text>No Description</xsl:text>
                                             </a>
                                         </xsl:otherwise>
                                     </xsl:choose>
-                                    <a class="btn btn-default"
+                                    <a class="btn btn-outline-secondary"
                                             href="{concat(/oai:OAI-PMH/oai:request/text(), '?verb=ListIdentifiers&amp;metadataPrefix=oai_dc&amp;set=', oai:setSpec/text())}">
                                         <xsl:text>List Identifiers</xsl:text>
                                     </a>
-                                    <a class="btn btn-default"
+                                    <a class="btn btn-outline-secondary"
                                             href="{concat(/oai:OAI-PMH/oai:request/text(), '?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;set=', oai:setSpec/text())}">
                                         <xsl:text>List Records</xsl:text>
                                     </a>
@@ -805,9 +764,9 @@ No support (may depend on server):
         </xsl:variable>
         <div class="oaipmh oaipmh-identifiers">
             <h2>List of Identifiers</h2>
-            <div class="well well-sm">
+            <div class="bg-body-tertiary border rounded p-2 mb-3">
                 <xsl:text>Results fetched </xsl:text>
-                <span class="badge">
+                <span class="badge rounded-pill text-bg-secondary">
                     <xsl:call-template name="result-count">
                         <xsl:with-param name="path" select="oai:header" />
                     </xsl:call-template>
@@ -833,15 +792,15 @@ No support (may depend on server):
                             </td>
                             <td>
                                 <xsl:value-of select="oai:identifier/text()" />
-                                <div class="btn-group pull-right" aria-label="Get record" role="group">
+                                <div class="btn-group float-end" aria-label="Get record" role="group">
                                     <xsl:choose>
                                         <xsl:when test="@status = 'deleted'">
-                                                <a class="btn btn-default disabled" href="#">
+                                                <a class="btn btn-outline-secondary disabled" aria-disabled="true">
                                                     <xsl:text>Deleted Record</xsl:text>
                                                 </a>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <a class="btn btn-default">
+                                            <a class="btn btn-outline-secondary">
                                                 <xsl:attribute name="href">
                                                     <xsl:value-of select="/oai:OAI-PMH/oai:request/text()" />
                                                     <xsl:text>?verb=GetRecord&amp;metadataPrefix=</xsl:text>
@@ -875,9 +834,9 @@ No support (may depend on server):
         </xsl:variable>
         <div class="oaipmh oaipmh-records">
             <h2>List of Records</h2>
-            <div class="well well-sm">
+            <div class="bg-body-tertiary border rounded p-2 mb-3">
                 <xsl:text>Results fetched </xsl:text>
-                <span class="badge">
+                <span class="badge rounded-pill text-bg-secondary">
                     <xsl:call-template name="result-count">
                         <xsl:with-param name="path" select="oai:record" />
                     </xsl:call-template>
@@ -903,15 +862,15 @@ No support (may depend on server):
                             </td>
                             <td>
                                 <xsl:value-of select="oai:header/oai:identifier/text()" />
-                                <div class="btn-group pull-right" aria-label="Get record" role="group">
+                                <div class="btn-group float-end" aria-label="Get record" role="group">
                                     <xsl:choose>
                                         <xsl:when test="oai:header/@status = 'deleted'">
-                                                <a class="btn btn-default disabled" href="#">
+                                                <a class="btn btn-outline-secondary disabled" aria-disabled="true">
                                                     <xsl:text>Deleted Record</xsl:text>
                                                 </a>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <a class="btn btn-default collapse-data-btn" data-toggle="collapse"
+                                            <a class="btn btn-outline-secondary collapse-data-btn" data-bs-toggle="collapse" role="button"
                                                     href="{concat('#', translate(oai:header/oai:identifier/text(), $forbidden-characters, ''))}">
                                                 <xsl:text>View Metadata</xsl:text>
                                             </a>
@@ -966,21 +925,21 @@ No support (may depend on server):
         <div class="oaipmh oaipmh-record">
             <h2>Record Details</h2>
             <xsl:for-each select="oai:record">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <div class="row">
                             <div class="col-sm-8 col-md-9 col-lg-10">
-                                <dl class="dl-horizontal">
-                                    <dt>Metadata Prefix</dt>
-                                    <dd><xsl:value-of select="/oai:OAI-PMH/oai:request/@metadataPrefix" /></dd>
-                                    <dt>Identifier</dt>
-                                    <dd><xsl:value-of select="oai:header/oai:identifier/text()" /></dd>
-                                    <dt>Last Modfied </dt>
-                                    <dd><xsl:value-of select="translate(oai:header/oai:datestamp/text(), 'TZ', ' ')" /></dd>
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-3">Metadata Prefix</dt>
+                                    <dd class="col-sm-9"><xsl:value-of select="/oai:OAI-PMH/oai:request/@metadataPrefix" /></dd>
+                                    <dt class="col-sm-3">Identifier</dt>
+                                    <dd class="col-sm-9"><xsl:value-of select="oai:header/oai:identifier/text()" /></dd>
+                                    <dt class="col-sm-3">Last Modified</dt>
+                                    <dd class="col-sm-9"><xsl:value-of select="translate(oai:header/oai:datestamp/text(), 'TZ', ' ')" /></dd>
                                 </dl>
                             </div>
                             <div class="col-sm-4 col-md-3 col-lg-2">
-                                <div class="btn-group pull-right" aria-label="List of identifiers and records" role="group">
+                                <div class="btn-group float-end" aria-label="List of identifiers and records" role="group">
                                     <xsl:call-template name="display-button-sets">
                                         <xsl:with-param name="path" select="oai:header/oai:setSpec" />
                                     </xsl:call-template>
@@ -988,7 +947,7 @@ No support (may depend on server):
                             </div>
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <xsl:choose>
                             <xsl:when test="oai:header/@status = 'deleted'">
                                 <h3>Deleted Record</h3>
@@ -1019,8 +978,8 @@ No support (may depend on server):
                     </a>
                 </div>
                 <xsl:if test="@expirationDate != ''">
-                    <div class="text-center">
-                        <span class="label label-default">
+                    <div class="text-center mt-2">
+                        <span class="badge text-bg-secondary">
                             <xsl:text>Expires </xsl:text>
                             <xsl:value-of select="normalize-space(translate(@expirationDate, 'TZ' , ' '))" />
                         </span>
@@ -1040,11 +999,17 @@ No support (may depend on server):
         <xsl:param name="title" />
         <xsl:param name="verb" />
         <xsl:param name="metadataPrefix" />
-        <li>
-            <xsl:if test="/oai:OAI-PMH/oai:request/@verb = $verb">
-                <xsl:attribute name="class">active</xsl:attribute>
-            </xsl:if>
+        <li class="nav-item">
             <xsl:element name="a">
+                <xsl:choose>
+                    <xsl:when test="/oai:OAI-PMH/oai:request/@verb = $verb">
+                        <xsl:attribute name="class">nav-link active</xsl:attribute>
+                        <xsl:attribute name="aria-current">page</xsl:attribute>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="class">nav-link</xsl:attribute>
+                    </xsl:otherwise>
+                </xsl:choose>
                 <xsl:if test="$title != ''">
                     <xsl:attribute name="title"><xsl:value-of select="$title" /></xsl:attribute>
                 </xsl:if>
@@ -1142,19 +1107,19 @@ No support (may depend on server):
     <xsl:template name="list-infos">
         <xsl:if test="not(/oai:OAI-PMH/oai:request/@resumptionToken)">
             <xsl:text> </xsl:text>
-            <span class="label label-default">
+            <span class="badge text-bg-secondary">
                 <xsl:value-of select="/oai:OAI-PMH/oai:request/@metadataPrefix" />
             </span>
             <xsl:if test="/oai:OAI-PMH/oai:request/@from != ''">
                 <xsl:text> </xsl:text>
-                <span class="label label-default">
+                <span class="badge text-bg-secondary">
                     <xsl:text>from </xsl:text>
                     <xsl:value-of select="normalize-space(translate(/oai:OAI-PMH/oai:request/@from, 'TZ' , ' '))" />
                 </span>
             </xsl:if>
             <xsl:if test="/oai:OAI-PMH/oai:request/@until != ''">
                 <xsl:text> </xsl:text>
-                <span class="label label-default">
+                <span class="badge text-bg-secondary">
                     <xsl:text>until </xsl:text>
                     <xsl:value-of select="normalize-space(translate(/oai:OAI-PMH/oai:request/@until, 'TZ' , ' '))" />
                 </span>
@@ -1169,34 +1134,32 @@ No support (may depend on server):
                 <xsl:variable name="metadata-prefix">
                     <xsl:call-template name="metadata-prefix" />
                 </xsl:variable>
-                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <xsl:text>View sets </xsl:text>
-                    <span class="label label-info"><xsl:value-of select="count($path)" /></span>
-                    <xsl:text> </xsl:text>
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li role="presentation" class="dropdown-header pull-right">
-                        <xsl:value-of select="$metadata-prefix" />
-                    </li>
-                    <xsl:for-each select="$path">
-                        <li>
-                            <a>
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="/oai:OAI-PMH/oai:request/text()" />
-                                    <xsl:text>?verb=ListRecords&amp;metadataPrefix=</xsl:text>
-                                    <xsl:value-of select="$metadata-prefix" />
-                                    <xsl:text>&amp;set=</xsl:text>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <xsl:text>View sets </xsl:text>
+                        <span class="badge text-bg-light"><xsl:value-of select="count($path)" /></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><h6 class="dropdown-header"><xsl:value-of select="$metadata-prefix" /></h6></li>
+                        <xsl:for-each select="$path">
+                            <li>
+                                <a class="dropdown-item">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="/oai:OAI-PMH/oai:request/text()" />
+                                        <xsl:text>?verb=ListRecords&amp;metadataPrefix=</xsl:text>
+                                        <xsl:value-of select="$metadata-prefix" />
+                                        <xsl:text>&amp;set=</xsl:text>
+                                        <xsl:value-of select="text()" />
+                                    </xsl:attribute>
                                     <xsl:value-of select="text()" />
-                                </xsl:attribute>
-                                <xsl:value-of select="text()" />
-                            </a>
-                        </li>
-                    </xsl:for-each>
-                </ul>
+                                </a>
+                            </li>
+                        </xsl:for-each>
+                    </ul>
+                </div>
             </xsl:when>
             <xsl:otherwise>
-                <a class="btn btn-default disabled" href="#">
+                <a class="btn btn-outline-secondary disabled" aria-disabled="true">
                     <xsl:text>Not in a set</xsl:text>
                 </a>
             </xsl:otherwise>

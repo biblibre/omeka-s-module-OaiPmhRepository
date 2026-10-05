@@ -30,7 +30,7 @@ pre {
   font-style: italic;
   margin-left: 10px;
 }
-.oaipmh-response .panel-heading a {
+.oaipmh-response .card-header a {
     color: #3c763d;
 }
 .oaipmh-description {
@@ -59,7 +59,7 @@ pre {
 .oaipmh-records table tr.collapse td {
   word-wrap: break-word;
 }
-.oaipmh-record .panel-body {
+.oaipmh-record .card-body {
   word-wrap: break-word;
 }
 .oaipmh-toolkit-icon {
