@@ -271,6 +271,9 @@ return [
                 'foaf:workplaceHomepage' => 'dcterms:references', // Personal Info // Social Web
                 'foaf:yahooChatID' => 'dcterms:identifier', // Online Accounts / IM
             ],
+            'oaipmhrepository_map_properties_sites' => [],
+            'oaipmhrepository_mappers' => [],
+            'oaipmhrepository_mappers_sites' => [],
             'oaipmhrepository_format_literal_striptags' => [
                 'oai_dc',
                 'oai_dcterms',

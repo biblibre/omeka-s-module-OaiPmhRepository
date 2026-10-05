@@ -2,6 +2,7 @@
 
 namespace OaiPmhRepository\Form;
 
+use Common\Form\Element as CommonElement;
 use Laminas\Form\Element;
 use Laminas\Form\Form;
 use Omeka\Form\Element as OmekaElement;
@@ -280,6 +281,54 @@ class ConfigForm extends Form
                     'id' => 'oaipmhrepository_map_properties',
                     'placeholder' => 'bibo:shortTitle = dcterms:alternative',
                     'rows' => 12,
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_map_properties_sites',
+                'type' => CommonElement\GroupTextarea::class,
+                'options' => [
+                    'tab' => 'formatting',
+                    'label' => 'Map properties by site', // @translate
+                    'info' => 'Specific mappings for the repository of some sites, so each harvester can get specific metadata. Each group starts with "# " and the site slug (this is not a comment). The mapping of a site replaces the main mapping above.', // @translate
+                    'as_key_value' => true,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_map_properties_sites',
+                    'placeholder' => "# my-site\ndcterms:alternative = dcterms:subject",
+                    'rows' => 6,
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_mappers',
+                'type' => OmekaElement\ArrayTextarea::class,
+                'options' => [
+                    'tab' => 'formatting',
+                    'label' => 'Mapper mappings by format', // @translate
+                    'info' => 'Use a mapping of the module Mapper instead of the internal process for some formats, with the format prefix and a mapping reference: "mapping:{id or label}" for a mapping in the database, "user:{file}" for a file in files/mapping/, or "module:{file}" for a file of the module Mapper.', // @translate
+                    'as_key_value' => true,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_mappers',
+                    'placeholder' => 'oai_dc = module:dublin-core/omeka_to_oai_dc.xml',
+                    'rows' => 4,
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_mappers_sites',
+                'type' => CommonElement\GroupTextarea::class,
+                'options' => [
+                    'tab' => 'formatting',
+                    'label' => 'Mapper mappings by site', // @translate
+                    'info' => 'Specific mappings of the module Mapper for the repository of some sites. Each group starts with "# " and the site slug (this is not a comment). The mapping of a format replaces the main one above. Use "none" to use the internal process for a format.', // @translate
+                    'as_key_value' => true,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_mappers_sites',
+                    'placeholder' => <<<'TXT'
+                        # my-site
+                        oai_dc = mapping:My oai_dc mapping
+                        TXT,
+                    'rows' => 4,
                 ],
             ])
 

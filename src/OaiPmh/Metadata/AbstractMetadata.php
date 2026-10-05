@@ -322,8 +322,11 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
 
         /** @var \Mapper\Stdlib\Mapper $mapper */
         $mapper = $this->services->get('Mapper\Mapper');
-        $mapper->setMappingName((string) $mappingName);
-        if (!$mapper->getMapping()) {
+        // The name is the reference too ("mapping:5", "user:file.xml"…). An
+        // already loaded mapping is reused.
+        $mappingName = (string) $mappingName;
+        $mapper->setMapping($mappingName, $mappingName);
+        if ($mapper->getMapperConfig()->hasError($mappingName)) {
             return false;
         }
 

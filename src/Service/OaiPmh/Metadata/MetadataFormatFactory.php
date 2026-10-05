@@ -118,6 +118,16 @@ class MetadataFormatFactory implements FactoryInterface
                 break;
         }
 
+        // The mappings of the module Mapper of the site replace the main ones.
+        $mappers = $settings->get('oaipmhrepository_mappers') ?: [];
+        if (!$isGlobalRepository) {
+            $siteSlug = $routeMatch->getParam('site-slug');
+            $mappers = array_replace($mappers, $settings->get('oaipmhrepository_mappers_sites')[$siteSlug] ?? []);
+        }
+        if (!empty($mappers[$prefix]) && $mappers[$prefix] !== 'none') {
+            $params[$prefix]['mapper'] = $mappers[$prefix];
+        }
+
         $metadataFormat
             ->setServices($services)
             ->setOaiSet($oaiSet)

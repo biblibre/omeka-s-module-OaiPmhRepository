@@ -253,19 +253,22 @@ class Module extends AbstractModule
 
     protected function mapOtherProperties(Event $event): void
     {
-        static $mapping;
+        // Checked mappings by raw mapping, since the site one may replace the
+        // main one.
+        static $mappings = [];
 
-        if ($mapping === null) {
-            /**
-             * @var \Laminas\ServiceManager\ServiceLocatorInterface $services
-             * @var \Omeka\Api\Manager $api
-             * @var \Omeka\Settings\Settings $settings
-             * @var \Common\Stdlib\EasyMeta $easyMeta
-             */
-            $services = $this->getServiceLocator();
-            $settings = $services->get('Omeka\Settings');
+        $services = $this->getServiceLocator();
+        // The mapping of the site replaces the main one when set.
+        $settings = $services->get('Omeka\Settings');
+        $siteSlug = $this->currentSiteSlug();
+        $rawMapping = ($siteSlug ? $settings->get('oaipmhrepository_map_properties_sites')[$siteSlug] ?? null : null)
+            ?: $settings->get('oaipmhrepository_map_properties', []);
+        $key = md5(serialize($rawMapping));
+
+        if (!isset($mappings[$key])) {
+            /** @var \Common\Stdlib\EasyMeta $easyMeta */
             $easyMeta = $services->get('Common\EasyMeta');
-            $mapping = $settings->get('oaipmhrepository_map_properties', []);
+            $mapping = $rawMapping;
             foreach ($mapping as $sourceTerm => $destinationTerm) {
                 if ($sourceTerm === $destinationTerm
                     || empty($sourceTerm)
@@ -276,27 +279,20 @@ class Module extends AbstractModule
                     || mb_substr($destinationTerm, 0, 1) === '#'
                     || strpos($sourceTerm, ':') === false
                     || strpos($destinationTerm, ':') === false
+                    || !$easyMeta->propertyId($sourceTerm)
+                    || !$easyMeta->propertyId($destinationTerm)
                 ) {
                     unset($mapping[$sourceTerm]);
-                    continue;
-                }
-                $propertyId = $easyMeta->propertyId($sourceTerm);
-                if (!$propertyId) {
-                    unset($mapping[$sourceTerm]);
-                    continue;
-                }
-                $propertyId = $easyMeta->propertyId($destinationTerm);
-                if (!$propertyId) {
-                    unset($mapping[$sourceTerm]);
-                    continue;
                 }
             }
+            $mappings[$key] = $mapping;
         }
+
+        $mapping = $mappings[$key];
         if (!count($mapping)) {
             return;
         }
 
-        $services = $this->getServiceLocator();
         $api = $services->get('Omeka\ApiManager');
         $easyMeta = $services->get('Common\EasyMeta');
 
@@ -383,6 +379,18 @@ class Module extends AbstractModule
             method_exists($value, 'uri') ? (string) $value->uri() : '',
             $valueResource ? (string) $valueResource->id() : '',
         ]);
+    }
+
+    /**
+     * Get the slug of the current site, if any.
+     */
+    protected function currentSiteSlug(): ?string
+    {
+        $mvcEvent = $this->getServiceLocator()->get('Application')->getMvcEvent();
+        $routeMatch = $mvcEvent ? $mvcEvent->getRouteMatch() : null;
+        return $routeMatch && $routeMatch->getParam('__SITE__')
+            ? $routeMatch->getParam('site-slug')
+            : null;
     }
 
     protected function getServerNameWithoutProtocol($serviceLocator)
