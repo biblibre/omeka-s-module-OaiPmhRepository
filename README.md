@@ -455,7 +455,7 @@ written by John Flatness, and many more.
 [schema]: http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd
 [EAD]: http://www.loc.gov/ead/
 [`EAD`]: https://gitlab.com/Daniel-KM/Omeka-S-module-Ead
-[module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/issues
+[module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/work_items
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [CeCILL-B]: https://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
 [GitLab]: https://gitlab.com/Daniel-KM

@@ -312,7 +312,7 @@ return [
                         'author' => [
                             'name' => 'John Flatness; Julian Maurice; Daniel Berthereau; and other contributors',
                             'email' => 'john@zerocrates.org; julian.maurice@biblibre.com; daniel.git@berthereau.net',
-                            'institution' => 'RRCHNM; BibLibre;',
+                            'institution' => 'Digital Scholar; BibLibre;',
                         ],
                         'version' => null,
                         'toolkitIcon' => 'https://omeka.org/favicon.ico',
