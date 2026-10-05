@@ -482,15 +482,27 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $api = $this->serviceLocator->get('Omeka\ApiManager');
 
-        $itemId = $oaiLocalId;
-
-        $data = [];
-        $data['id'] = $itemId;
-        $data['limit'] = 1;
+        $data = ['limit' => 1];
         if ($this->site) {
             $data['site_id'] = $this->site->id();
         }
-        $items = $api->search('items', $data)->getContent();
+
+        // The local id is the value of the identifier property, else the
+        // internal id for items without it.
+        $items = [];
+        $identifierProperty = OaiIdentifier::getIdentifierProperty();
+        if ($identifierProperty) {
+            $items = $api->search('items', $data + [
+                'property' => [[
+                    'property' => $identifierProperty,
+                    'type' => 'eq',
+                    'text' => $oaiLocalId,
+                ]],
+            ])->getContent();
+        }
+        if (!$items && ctype_digit((string) $oaiLocalId)) {
+            $items = $api->search('items', $data + ['id' => (int) $oaiLocalId])->getContent();
+        }
 
         if ($items) {
             $item = reset($items);
